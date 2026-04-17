@@ -1,111 +1,121 @@
 import { Header } from "@/components/header"
-import Image from "next/image"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
+import { ArrowLeft, ChevronRight, Check } from "lucide-react"
+import { getKits } from "@/lib/products"
 
 export default function CollectionsPage() {
-  const collections = [
-    {
-      id: "executive",
-      name: "Executive Collection",
-      description:
-        "Bold, sophisticated pieces for the modern power dresser. Featuring rich textures and commanding colors.",
-      image: "/thudarum-burgundy-evening-suit.jpg",
-      items: "12 items",
-    },
-    {
-      id: "heritage",
-      name: "Heritage Collection",
-      description: "Classic tailoring with timeless appeal. Traditional patterns reimagined for contemporary elegance.",
-      image: "/thudarum-green-check-blazer.jpg",
-      items: "8 items",
-    },
-    {
-      id: "contemporary",
-      name: "Contemporary Collection",
-      description: "Modern cuts and innovative styling for the forward-thinking gentleman.",
-      image: "/thudarum-sky-blue-blazer.jpg",
-      items: "10 items",
-    },
-    {
-      id: "evening",
-      name: "Evening Collection",
-      description: "Luxurious velvet and satin pieces designed to make a statement at formal occasions.",
-      image: "/thudarum-navy-velvet-blazer.jpg",
-      items: "6 items",
-    },
-  ]
+  const kits = getKits()
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Header />
-
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
-        <Button variant="ghost" asChild className="mb-6">
+      <div className="container mx-auto px-4 md:px-6 py-8 md:py-12">
+        <Button variant="ghost" asChild className="mb-4">
           <Link href="/">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
           </Link>
         </Button>
 
-        <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16 md:mb-24">
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold mb-6 tracking-tight">
-            Collections
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground text-balance">
-            Explore our curated collections, each telling a unique story of style, craftsmanship, and modern elegance.
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Detailing Kits</h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+            Complete packages designed for every skill level. Everything you need to achieve professional results at home.
           </p>
         </div>
 
-        {/* Collections Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
-          {collections.map((collection) => (
-            <Link key={collection.id} href={`/shop?collection=${collection.id}`} className="group">
-              <div className="relative aspect-[4/5] overflow-hidden bg-secondary mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {kits.map((kit) => (
+            <div
+              key={kit.id}
+              className="group bg-card rounded-lg border border-border overflow-hidden hover:border-primary transition-all duration-300"
+            >
+              <div className="aspect-[4/3] relative overflow-hidden">
                 <Image
-                  src={collection.image || "/placeholder.svg"}
-                  alt={collection.name}
+                  src={kit.image}
+                  alt={kit.name}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <p className="text-white/80 text-xs sm:text-sm mb-2">{collection.items}</p>
-                  <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-white mb-2">
-                    {collection.name}
-                  </h2>
-                  <p className="text-white/90 text-sm sm:text-base opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                    {collection.description}
-                  </p>
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+              </div>
+              <div className="p-6">
+                <span className="text-xs text-primary font-medium uppercase tracking-wider">Complete Kit</span>
+                <h2 className="text-xl font-bold mt-2 mb-3 group-hover:text-primary transition-colors">
+                  {kit.name}
+                </h2>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                  {kit.description}
+                </p>
+
+                {/* Kit Contents */}
+                {kit.details && (
+                  <div className="mb-6">
+                    <h3 className="text-sm font-semibold mb-2">What&apos;s Included:</h3>
+                    <ul className="space-y-1">
+                      {kit.details.slice(0, 4).map((detail, index) => (
+                        <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
+                          <Check className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span>{detail}</span>
+                        </li>
+                      ))}
+                      {kit.details.length > 4 && (
+                        <li className="text-sm text-muted-foreground pl-6">
+                          +{kit.details.length - 4} more items
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between pt-4 border-t border-border">
+                  <span className="text-2xl font-bold">${kit.price.toFixed(2)}</span>
+                  <Button asChild>
+                    <Link href={`/product/${kit.id}`}>
+                      View Kit
+                      <ChevronRight className="ml-1 h-4 w-4" />
+                    </Link>
+                  </Button>
                 </div>
               </div>
-              <Button variant="ghost" className="w-full justify-between text-sm sm:text-base group-hover:bg-secondary">
-                View Collection
-                <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
-              </Button>
-            </Link>
+            </div>
           ))}
         </div>
-      </section>
 
-      {/* Featured Section */}
-      <section className="bg-secondary py-12 sm:py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold mb-6">Crafted for Excellence</h2>
-            <p className="text-muted-foreground mb-8 text-base sm:text-lg leading-relaxed">
-              Each collection is carefully curated to offer a distinct aesthetic while maintaining the exceptional
-              quality and attention to detail that defines Thudarum. From boardroom to ballroom, we have the perfect
-              piece for every occasion.
+        {/* Why Choose a Kit Section */}
+        <section className="mt-16 py-12 bg-card rounded-lg border border-border">
+          <div className="text-center mb-10 px-4">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Why Choose a Kit?</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Our kits are carefully curated to give you everything you need at a better value.
             </p>
-            <Button asChild size="lg" variant="outline" className="h-12 px-8 bg-transparent">
-              <Link href="/shop">Browse All Products</Link>
-            </Button>
           </div>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-6 md:px-12">
+            {[
+              {
+                title: "Save Money",
+                description: "Kits are priced up to 20% less than buying products separately."
+              },
+              {
+                title: "No Guesswork",
+                description: "We've selected products that work perfectly together."
+              },
+              {
+                title: "Perfect for Learning",
+                description: "Each kit includes guides to help you get started."
+              }
+            ].map((benefit, index) => (
+              <div key={index} className="text-center">
+                <div className="text-4xl font-bold text-primary mb-4">0{index + 1}</div>
+                <h3 className="font-semibold mb-2">{benefit.title}</h3>
+                <p className="text-sm text-muted-foreground">{benefit.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   )
 }

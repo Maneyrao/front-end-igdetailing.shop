@@ -1,22 +1,18 @@
 import type React from "react"
-import type { Metadata } from "next"
-import { Geist, Playfair_Display } from "next/font/google"
+import type { Metadata, Viewport } from "next"
+import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { CartProvider } from "@/components/cart-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { ShippingTicker } from "@/components/shipping-ticker"
+import { WhatsAppButton } from "@/components/whatsapp-button"
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400", "500", "600", "700"],
-})
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
-  title: "Thudarum - Modern Fashion",
-  description: "Minimalist contemporary fashion for the discerning individual",
+  title: "IG Detailing Shop - Professional Car Detailing Products",
+  description: "Premium car detailing products for enthusiasts and professionals. Shampoos, waxes, interior cleaners, microfiber towels, and complete detailing kits.",
   generator: "v0.app",
   icons: {
     icon: [
@@ -37,17 +33,24 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  themeColor: "#1a1a2e",
+  width: "device-width",
+  initialScale: 1,
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geist.variable} ${playfair.variable} font-sans antialiased`}>
+    <html lang="en" className="bg-background">
+      <body className={`${inter.variable} font-sans antialiased`}>
         <CartProvider>
           <ShippingTicker />
           {children}
+          <WhatsAppButton />
           <Toaster />
         </CartProvider>
         <Analytics />

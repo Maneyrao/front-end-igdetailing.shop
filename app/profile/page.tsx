@@ -16,7 +16,7 @@ function ProfileContent() {
   const defaultTab = searchParams.get("tab") || "profile"
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 max-w-7xl">
         <Button variant="ghost" asChild className="mb-6 sm:mb-8 -ml-4">
@@ -26,7 +26,7 @@ function ProfileContent() {
           </Link>
         </Button>
 
-        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold mb-8 sm:mb-10">My Account</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10">My Account</h1>
 
         <Tabs defaultValue={defaultTab} className="space-y-8 sm:space-y-10">
           <TabsList className="grid w-full grid-cols-3 h-12 sm:h-14">

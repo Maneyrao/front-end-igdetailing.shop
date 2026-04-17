@@ -9,7 +9,7 @@ export interface CartItem {
   name: string
   price: number
   image: string
-  size: string
+  size: string // For kits this could be "Standard Kit", for products it's the actual size
   quantity: number
 }
 

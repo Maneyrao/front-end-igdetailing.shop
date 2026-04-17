@@ -77,7 +77,7 @@ export function CheckoutForm({ total }: CheckoutFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
       {/* Contact Information */}
       <div>
-        <h2 className="font-serif text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">Contact Information</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Contact Information</h2>
         <div className="space-y-3 sm:space-y-4">
           <div>
             <Label htmlFor="email" className="text-sm">
@@ -99,7 +99,7 @@ export function CheckoutForm({ total }: CheckoutFormProps) {
 
       {/* Shipping Address */}
       <div>
-        <h2 className="font-serif text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">Shipping Address</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Shipping Address</h2>
         <div className="space-y-3 sm:space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
@@ -228,7 +228,7 @@ export function CheckoutForm({ total }: CheckoutFormProps) {
 
       {/* Payment Information */}
       <div>
-        <h2 className="font-serif text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">Payment Information</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Payment Information</h2>
         <div className="space-y-3 sm:space-y-4">
           <div>
             <Label htmlFor="cardNumber" className="text-sm">

@@ -1,7 +1,6 @@
 "use client"
 
 import { Label } from "@/components/ui/label"
-
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/components/cart-provider"
@@ -22,7 +21,7 @@ export default function CartPage() {
   const coupons = {
     WELCOME10: 10,
     SAVE20: 20,
-    LUXURY15: 15,
+    SHINE15: 15,
   }
 
   const handleApplyCoupon = () => {
@@ -56,7 +55,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 md:px-6 py-16 md:py-24">
           <div className="max-w-2xl mx-auto text-center">
@@ -66,7 +65,7 @@ export default function CartPage() {
                 Back to Shop
               </Link>
             </Button>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold mb-4">Your Cart</h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Your Cart</h1>
             <p className="text-muted-foreground mb-8">Your shopping cart is empty</p>
             <Button asChild size="lg">
               <Link href="/shop">Continue Shopping</Link>
@@ -78,7 +77,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
         <Button variant="ghost" asChild className="mb-4">
@@ -88,7 +87,7 @@ export default function CartPage() {
           </Link>
         </Button>
 
-        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Shopping Cart</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
           {/* Cart Items */}
@@ -96,7 +95,7 @@ export default function CartPage() {
             {items.map((item) => (
               <div key={`${item.id}-${item.size}`} className="flex gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-border">
                 {/* Product Image */}
-                <div className="relative w-20 h-24 sm:w-24 sm:h-32 bg-secondary flex-shrink-0 overflow-hidden">
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-secondary rounded-lg flex-shrink-0 overflow-hidden">
                   <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
                 </div>
 
@@ -118,10 +117,10 @@ export default function CartPage() {
 
                   <div className="flex items-center justify-between mt-3 sm:mt-4">
                     {/* Quantity Controls */}
-                    <div className="flex items-center gap-2 sm:gap-3 border border-border">
+                    <div className="flex items-center gap-2 sm:gap-3 border border-border rounded-lg">
                       <button
                         onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)}
-                        className="px-2 py-1.5 sm:px-3 sm:py-2 hover:bg-secondary transition-colors"
+                        className="px-2 py-1.5 sm:px-3 sm:py-2 hover:bg-secondary transition-colors rounded-l-lg"
                       >
                         <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
                         <span className="sr-only">Decrease quantity</span>
@@ -129,7 +128,7 @@ export default function CartPage() {
                       <span className="w-6 sm:w-8 text-center text-sm sm:text-base font-medium">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)}
-                        className="px-2 py-1.5 sm:px-3 sm:py-2 hover:bg-secondary transition-colors"
+                        className="px-2 py-1.5 sm:px-3 sm:py-2 hover:bg-secondary transition-colors rounded-r-lg"
                       >
                         <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
                         <span className="sr-only">Increase quantity</span>
@@ -137,7 +136,7 @@ export default function CartPage() {
                     </div>
 
                     {/* Price */}
-                    <p className="font-medium text-sm sm:text-base">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-bold text-sm sm:text-base">${(item.price * item.quantity).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -146,17 +145,17 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="border border-border p-4 sm:p-6 lg:sticky lg:top-24 rounded-none">
-              <h2 className="font-serif text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Order Summary</h2>
+            <div className="border border-border bg-card p-4 sm:p-6 lg:sticky lg:top-24 rounded-lg">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Order Summary</h2>
 
               <div className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-border">
                 <Label htmlFor="coupon" className="text-sm font-medium mb-2 block">
                   Coupon Code
                 </Label>
                 {appliedCoupon ? (
-                  <div className="flex items-center justify-between p-3 bg-secondary border border-border">
+                  <div className="flex items-center justify-between p-3 bg-secondary border border-border rounded-lg">
                     <div className="flex items-center gap-2">
-                      <Tag className="h-4 w-4 text-green-600" />
+                      <Tag className="h-4 w-4 text-primary" />
                       <span className="text-sm font-medium">{appliedCoupon.code}</span>
                       <span className="text-xs text-muted-foreground">-{appliedCoupon.discount}%</span>
                     </div>
@@ -174,7 +173,7 @@ export default function CartPage() {
                       placeholder="Enter code"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      className="flex-1"
+                      className="flex-1 bg-secondary"
                     />
                     <Button
                       type="button"
@@ -187,7 +186,7 @@ export default function CartPage() {
                     </Button>
                   </div>
                 )}
-                <p className="text-xs text-muted-foreground mt-2">Try: WELCOME10, SAVE20, LUXURY15</p>
+                <p className="text-xs text-muted-foreground mt-2">Try: WELCOME10, SAVE20, SHINE15</p>
               </div>
 
               <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
@@ -196,14 +195,14 @@ export default function CartPage() {
                   <span className="font-medium">${total.toFixed(2)}</span>
                 </div>
                 {appliedCoupon && (
-                  <div className="flex justify-between text-sm text-green-600">
+                  <div className="flex justify-between text-sm text-primary">
                     <span>Discount ({appliedCoupon.discount}%)</span>
                     <span className="font-medium">-${discountAmount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span className="font-medium">{subtotalAfterDiscount >= 200 ? "Free" : "$15.00"}</span>
+                  <span className="font-medium">{subtotalAfterDiscount >= 75 ? "Free" : "$9.99"}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Tax</span>
@@ -212,22 +211,22 @@ export default function CartPage() {
               </div>
 
               <div className="border-t border-border pt-3 sm:pt-4 mb-4 sm:mb-6">
-                <div className="flex justify-between font-serif text-base sm:text-lg font-semibold">
+                <div className="flex justify-between text-base sm:text-lg font-bold">
                   <span>Total</span>
-                  <span>
+                  <span className="text-primary">
                     $
                     {(
                       subtotalAfterDiscount +
-                      (subtotalAfterDiscount >= 200 ? 0 : 15) +
+                      (subtotalAfterDiscount >= 75 ? 0 : 9.99) +
                       subtotalAfterDiscount * 0.08
                     ).toFixed(2)}
                   </span>
                 </div>
               </div>
 
-              {subtotalAfterDiscount < 200 && (
+              {subtotalAfterDiscount < 75 && (
                 <p className="text-xs text-muted-foreground mb-4 sm:mb-6">
-                  Add ${(200 - subtotalAfterDiscount).toFixed(2)} more for free shipping
+                  Add ${(75 - subtotalAfterDiscount).toFixed(2)} more for free shipping
                 </p>
               )}
 

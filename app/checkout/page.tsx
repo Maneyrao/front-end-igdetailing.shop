@@ -13,7 +13,7 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 md:px-6 py-16 md:py-24">
           <div className="max-w-2xl mx-auto text-center">
@@ -23,7 +23,7 @@ export default function CheckoutPage() {
                 Back to Shop
               </Link>
             </Button>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold mb-4">Checkout</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4">Checkout</h1>
             <p className="text-muted-foreground mb-8">Your cart is empty</p>
             <Button asChild size="lg">
               <Link href="/shop">Continue Shopping</Link>
@@ -34,7 +34,7 @@ export default function CheckoutPage() {
     )
   }
 
-  const shipping = total >= 200 ? 0 : 15
+  const shipping = total >= 75 ? 0 : 9.99
   const tax = total * 0.08
   const orderTotal = total + shipping + tax
 
@@ -49,7 +49,7 @@ export default function CheckoutPage() {
           </Link>
         </Button>
 
-        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8">Checkout</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           {/* Checkout Form */}
