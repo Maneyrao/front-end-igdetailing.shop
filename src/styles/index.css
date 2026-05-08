@@ -33,6 +33,14 @@ html {
   overflow: hidden;
 }
 
+.category-filter-scroll {
+  scrollbar-width: none;
+}
+
+.category-filter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .promo-marquee-track {
   animation: promo-marquee 26s linear infinite;
 }

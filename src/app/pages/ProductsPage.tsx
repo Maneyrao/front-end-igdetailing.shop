@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { ArrowRight, Search, ShoppingCart, SlidersHorizontal } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Search, ShoppingCart, SlidersHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { PRODUCT_CATEGORIES, CATEGORY_LABELS, type ProductCategorySlug } from '../../lib/catalog';
 import { formatARS } from '../../lib/format';
@@ -31,6 +31,7 @@ function isAvailable(product: Product) {
 
 export default function ProductsPage() {
   const { addToCart, getCartCount } = useCart();
+  const categoryScrollerRef = useRef<HTMLDivElement>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -121,6 +122,13 @@ export default function ProductsPage() {
     toast.success(`${product.name} agregado al carrito`);
   };
 
+  const scrollCategoryFilters = (direction: 'previous' | 'next') => {
+    categoryScrollerRef.current?.scrollBy({
+      left: direction === 'next' ? 240 : -240,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <div className="min-h-screen bg-[#050607]">
       <section className="border-b border-white/10 bg-[#071018] px-4 py-12 sm:px-6 lg:px-8">
@@ -187,22 +195,43 @@ export default function ProductsPage() {
               </label>
             </div>
 
-            <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1">
-              {categoryFilters.map((item) => (
-                <button
-                  key={item.slug}
-                  type="button"
-                  onClick={() => setCategory(item.slug)}
-                  className={`shrink-0 rounded-full border px-4 py-2 text-sm font-black transition ${
-                    category === item.slug
-                      ? 'border-cyan-300 bg-cyan-300 text-[#061018]'
-                      : 'border-white/10 bg-white/[0.035] text-slate-300 hover:border-cyan-300/40 hover:text-white'
-                  }`}
-                >
-                  {item.name}
-                  <span className="ml-2 text-xs opacity-70">{countsByCategory[item.slug] ?? 0}</span>
-                </button>
-              ))}
+            <div className="relative mx-auto mt-4 max-w-7xl">
+              <button
+                type="button"
+                onClick={() => scrollCategoryFilters('previous')}
+                className="absolute left-0 top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#071018]/95 text-white shadow-lg shadow-black/30 transition hover:border-cyan-300/40 hover:bg-[#0EA5E9]"
+                aria-label="Pasar a categorías anteriores"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <div
+                ref={categoryScrollerRef}
+                className="category-filter-scroll flex gap-2 overflow-x-auto scroll-smooth px-11 pb-1"
+              >
+                {categoryFilters.map((item) => (
+                  <button
+                    key={item.slug}
+                    type="button"
+                    onClick={() => setCategory(item.slug)}
+                    className={`shrink-0 rounded-full border px-4 py-2 text-sm font-black transition ${
+                      category === item.slug
+                        ? 'border-cyan-300 bg-cyan-300 text-[#061018]'
+                        : 'border-white/10 bg-white/[0.035] text-slate-300 hover:border-cyan-300/40 hover:text-white'
+                    }`}
+                  >
+                    {item.name}
+                    <span className="ml-2 text-xs opacity-70">{countsByCategory[item.slug] ?? 0}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollCategoryFilters('next')}
+                className="absolute right-0 top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#0EA5E9] text-white shadow-lg shadow-cyan-950/40 transition hover:bg-[#38BDF8]"
+                aria-label="Pasar a más categorías"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
             </div>
           </div>
 
