@@ -40,56 +40,21 @@ export const Header = () => {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1">
-            <div
-              className="relative"
-              onMouseEnter={() => setProductsOpen(true)}
-              onMouseLeave={() => setProductsOpen(false)}
+            <button
+              type="button"
+              onClick={() => setProductsOpen((open) => !open)}
+              className="inline-flex items-center gap-2 rounded-full bg-[#0EA5E9] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#38BDF8]"
+              aria-expanded={productsOpen}
+              aria-controls="desktop-products-menu"
             >
-              <Link
-                to="/productos"
-                className="inline-flex items-center gap-2 rounded-full bg-[#0EA5E9] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#38BDF8]"
-                onFocus={() => setProductsOpen(true)}
-              >
-                Productos
-                <ChevronDown className={`h-4 w-4 transition ${productsOpen ? 'rotate-180' : ''}`} />
-              </Link>
-              {productsOpen && (
-                <div className="absolute left-0 top-full w-[360px] pt-3">
-                  <div className="overflow-hidden rounded-xl border border-cyan-300/15 bg-[#071018] p-2 shadow-2xl shadow-black/50">
-                    <Link
-                      to="/productos"
-                      onClick={closeNavigation}
-                      className="mb-2 flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-3 text-white transition hover:border-cyan-300/30 hover:bg-white/[0.07]"
-                    >
-                      <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-300/10">
-                        <PackageSearch className="h-5 w-5 text-[#38BDF8]" />
-                      </span>
-                      <span>
-                        <span className="block text-sm font-black">Todos los productos</span>
-                        <span className="block text-xs text-slate-400">Catálogo por etapa de uso</span>
-                      </span>
-                    </Link>
-                    <div className="grid grid-cols-1 gap-1">
-                      {PRODUCT_CATEGORIES.map((category) => (
-                        <Link
-                          key={category.slug}
-                          to={`/category/${category.slug}`}
-                          onClick={closeNavigation}
-                          className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/[0.06] hover:text-white"
-                        >
-                          {category.shortName}
-                          <span className="text-xs font-medium text-slate-500">{category.featured ? 'Recomendado' : 'Ver'}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+              Productos
+              <ChevronDown className={`h-4 w-4 transition ${productsOpen ? 'rotate-180' : ''}`} />
+            </button>
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
+                onClick={() => setProductsOpen(false)}
                 className="rounded-full px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
               >
                 {item.label}
@@ -171,6 +136,41 @@ export const Header = () => {
           </div>
         </div>
       </div>
+      {productsOpen && (
+        <div id="desktop-products-menu" className="absolute inset-x-0 top-full z-[60] hidden px-4 pt-3 md:block">
+          <div className="mx-auto w-[min(720px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-cyan-300/20 bg-[#071018] p-3 shadow-2xl shadow-black/60">
+            <Link
+              to="/productos"
+              onClick={closeNavigation}
+              className="mb-3 flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 text-white transition hover:border-cyan-300/30 hover:bg-white/[0.07]"
+            >
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-300/10">
+                <PackageSearch className="h-6 w-6 text-[#38BDF8]" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-base font-black">Todos los productos</span>
+                <span className="block text-sm text-slate-400">Catálogo completo por etapa de uso</span>
+              </span>
+            </Link>
+            <div className="grid grid-cols-2 gap-2">
+              {PRODUCT_CATEGORIES.map((category) => (
+                <Link
+                  key={category.slug}
+                  to={`/category/${category.slug}`}
+                  onClick={closeNavigation}
+                  className="rounded-xl border border-transparent px-4 py-3 text-slate-300 transition hover:border-cyan-300/20 hover:bg-white/[0.06] hover:text-white"
+                >
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-black">{category.shortName}</span>
+                    <span className="text-xs font-bold text-slate-500">{category.featured ? 'Recomendado' : 'Ver'}</span>
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed text-slate-500">{category.description}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
       <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </header>
   );
