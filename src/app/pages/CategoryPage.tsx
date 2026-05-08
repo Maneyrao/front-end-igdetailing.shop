@@ -76,7 +76,7 @@ export default function CategoryPage() {
   }
 
   const handleAddToCart = (product: Product, e: React.MouseEvent) => {
-    e.preventDefault();
+    e.stopPropagation();
     if (!product.isKit && (product.stock ?? 0) <= 0) return;
     addToCart(product);
   };
@@ -130,11 +130,8 @@ export default function CategoryPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Link
-                  to={`/product/${product.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#101720] transition-all hover:border-cyan-300/35 hover:shadow-lg hover:shadow-cyan-950/20"
-                >
-                  <div className="relative h-56 overflow-hidden bg-black">
+                <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#101720] transition-all hover:border-cyan-300/35 hover:shadow-lg hover:shadow-cyan-950/20">
+                  <Link to={`/product/${product.slug}`} className="relative block h-56 overflow-hidden bg-black">
                     <img
                       src={product.image}
                       alt={product.name}
@@ -159,17 +156,19 @@ export default function CategoryPage() {
                         {isOutOfStock ? 'Sin stock' : `${product.stock ?? 0} u.`}
                       </div>
                     )}
-                  </div>
+                  </Link>
 
                   <div className="p-5 flex-1 flex flex-col">
-                    <h3 className="text-white font-black text-lg mb-2 group-hover:text-[#38BDF8] transition">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-400 text-sm mb-4 flex-1 line-clamp-2">
-                      {product.shortDescription}
-                    </p>
+                    <Link to={`/product/${product.slug}`} className="block">
+                      <h3 className="text-white font-black text-lg mb-2 group-hover:text-[#38BDF8] transition">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                        {product.shortDescription}
+                      </p>
+                    </Link>
 
-                    <div className="mb-4">
+                    <div className="mb-4 mt-auto">
                       <span className="inline-block rounded bg-white/[0.06] px-2 py-1 text-xs font-semibold text-slate-300">
                         {product.isKit ? 'Kit completo' : CATEGORY_LABELS[product.category] ?? product.category}
                       </span>
@@ -180,6 +179,7 @@ export default function CategoryPage() {
                         {formatARS(product.price)}
                       </span>
                       <button
+                        type="button"
                         onClick={(e) => handleAddToCart(product, e)}
                         disabled={isOutOfStock}
                         className="inline-flex h-11 w-11 items-center justify-center bg-[#0EA5E9] text-white rounded-lg hover:bg-[#38BDF8] transition disabled:cursor-not-allowed disabled:opacity-50"
@@ -189,7 +189,7 @@ export default function CategoryPage() {
                       </button>
                     </div>
                   </div>
-                </Link>
+                </article>
               </motion.div>
               );
             })}

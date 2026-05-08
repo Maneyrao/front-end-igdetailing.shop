@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
-import { Lock, MessageCircle } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../../lib/supabase';
 import { formatARS } from '../../lib/format';
-import { BANK_TRANSFER, FREE_SHIPPING_FROM, STANDARD_SHIPPING_COST, buildWhatsAppUrl } from '../../lib/business';
+import { BANK_TRANSFER, FREE_SHIPPING_FROM, HAS_CONFIRMED_BANK_TRANSFER, STANDARD_SHIPPING_COST } from '../../lib/business';
 import { BackLink } from '../components/BackLink';
 
 // Genera un número de pedido único-ish basado en timestamp en base 36.
@@ -197,16 +197,8 @@ export default function CheckoutPage() {
     }
   };
 
-  // Mensaje de WhatsApp prefilled con resumen del carrito
-  const waCartSummary = items
-    .map((i) => `${i.quantity}x ${i.product.name}`)
-    .join(', ');
-  const waLink = buildWhatsAppUrl(
-    `Hola! Quiero coordinar el pago de mi pedido. Productos: ${waCartSummary}. Total: ${formatARS(total)}`
-  );
-
   return (
-    <div className="min-h-screen bg-[#050607] py-8">
+    <div className="min-h-screen bg-[#050607] py-8 pb-28 sm:pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <BackLink fallback="/cart" label="Volver al carrito" className="mb-8" />
 
@@ -227,6 +219,7 @@ export default function CheckoutPage() {
           {/* Formulario */}
           <div className="lg:col-span-2">
             <motion.form
+              id="checkout-form"
               onSubmit={handleSubmit}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -357,48 +350,44 @@ export default function CheckoutPage() {
               <div className="bg-[#0B0F14] rounded-xl p-6 border border-white/10">
                 <h2 className="text-xl font-bold text-white mb-4">Pago</h2>
                 <p className="text-gray-400 mb-5 text-sm leading-relaxed">
-                  No pagás en esta pantalla. Confirmás el pedido y después coordinamos la transferencia
-                  o el medio de pago por WhatsApp.
+                  No pagás en esta pantalla. Primero confirmás el pedido; después te mostramos el número de orden
+                  y los pasos para coordinar el pago manual.
                 </p>
 
-                <div className="bg-white/[0.06] rounded-xl p-5 space-y-3 text-sm mb-5">
-                  {BANK_TRANSFER.bank !== 'A coordinar' && (
+                {HAS_CONFIRMED_BANK_TRANSFER ? (
+                  <div className="bg-white/[0.06] rounded-xl p-5 space-y-3 text-sm">
+                    {BANK_TRANSFER.bank !== 'A coordinar' && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Banco</span>
+                        <span className="text-white font-medium">{BANK_TRANSFER.bank}</span>
+                      </div>
+                    )}
+                    {BANK_TRANSFER.cbu && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">CBU</span>
+                        <span className="text-white font-mono">{BANK_TRANSFER.cbu}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Banco</span>
-                      <span className="text-white font-medium">{BANK_TRANSFER.bank}</span>
+                      <span className="text-gray-400">Alias</span>
+                      <span className="text-white font-medium">{BANK_TRANSFER.alias}</span>
                     </div>
-                  )}
-                  {BANK_TRANSFER.cbu && (
                     <div className="flex justify-between">
-                      <span className="text-gray-400">CBU</span>
-                      <span className="text-white font-mono">{BANK_TRANSFER.cbu}</span>
+                      <span className="text-gray-400">Titular</span>
+                      <span className="text-white font-medium">{BANK_TRANSFER.holder}</span>
                     </div>
-                  )}
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Alias</span>
-                    <span className="text-white font-medium">{BANK_TRANSFER.alias}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Titular</span>
-                    <span className="text-white font-medium">{BANK_TRANSFER.holder}</span>
+                ) : (
+                  <div className="rounded-xl border border-cyan-300/15 bg-cyan-300/10 p-4 text-sm leading-relaxed text-cyan-50">
+                    Los datos de pago se coordinan cuando el pedido queda registrado.
                   </div>
-                </div>
-
-                <a
-                  href={waLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg transition text-sm"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Coordinar pago por WhatsApp
-                </a>
+                )}
               </div>
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-[#0EA5E9] text-white font-semibold py-4 rounded-lg hover:bg-[#38BDF8] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="hidden w-full bg-[#0EA5E9] text-white font-semibold py-4 rounded-lg hover:bg-[#38BDF8] transition disabled:opacity-50 disabled:cursor-not-allowed sm:block"
               >
                 {submitting ? 'Procesando...' : `Confirmar pedido · ${formatARS(total)}`}
               </button>
@@ -458,6 +447,22 @@ export default function CheckoutPage() {
               </div>
             </motion.div>
           </div>
+        </div>
+      </div>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#050607]/95 p-3 backdrop-blur sm:hidden">
+        <div className="mx-auto flex max-w-7xl items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold text-slate-400">Total</p>
+            <p className="truncate text-lg font-black text-white">{formatARS(total)}</p>
+          </div>
+          <button
+            type="submit"
+            form="checkout-form"
+            disabled={submitting}
+            className="rounded-lg bg-[#0EA5E9] px-5 py-3 text-sm font-black text-white transition hover:bg-[#38BDF8] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {submitting ? 'Procesando...' : 'Confirmar'}
+          </button>
         </div>
       </div>
     </div>

@@ -1,7 +1,9 @@
 import { MessageCircle } from 'lucide-react';
-import { buildWhatsAppUrl } from '../../lib/business';
+import { HAS_CONFIRMED_WHATSAPP, buildWhatsAppUrl } from '../../lib/business';
 
 export const WhatsAppButton = () => {
+  if (!HAS_CONFIRMED_WHATSAPP) return null;
+
   const handleWhatsAppClick = () => {
     window.open(
       buildWhatsAppUrl('Hola! Quiero consultar por productos de detailing.'),

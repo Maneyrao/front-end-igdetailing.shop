@@ -14,6 +14,10 @@ export const BANK_TRANSFER = {
   holder: STORE_NAME,
 };
 
+export const HAS_CONFIRMED_WHATSAPP = !/0{6,}/.test(STORE_WHATSAPP);
+export const HAS_CONFIRMED_ADDRESS = !STORE_ADDRESS.toLowerCase().includes('confirmar');
+export const HAS_CONFIRMED_BANK_TRANSFER = BANK_TRANSFER.bank !== 'A coordinar' || Boolean(BANK_TRANSFER.cbu);
+
 export function buildWhatsAppUrl(message: string) {
   return `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(message)}`;
 }

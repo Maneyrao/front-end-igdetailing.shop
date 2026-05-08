@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowRight, BadgeCheck, MessageCircle, PackageCheck, ShieldCheck, Truck } from 'lucide-react';
-import { buildWhatsAppUrl } from '../../../lib/business';
+import { HAS_CONFIRMED_WHATSAPP, buildWhatsAppUrl } from '../../../lib/business';
 
 const trustItems = [
   {
@@ -82,14 +82,16 @@ export const TrustSection = () => {
                   Ver kits
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <a
-                  href={buildWhatsAppUrl('Hola! Quiero consultar por productos de detailing.')}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 px-6 py-4 text-sm font-bold text-white transition hover:bg-white/[0.06]"
-                >
-                  Consultar por WhatsApp
-                </a>
+                {HAS_CONFIRMED_WHATSAPP && (
+                  <a
+                    href={buildWhatsAppUrl('Hola! Quiero consultar por productos de detailing.')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 px-6 py-4 text-sm font-bold text-white transition hover:bg-white/[0.06]"
+                  >
+                    Consultar por WhatsApp
+                  </a>
+                )}
               </div>
             </div>
 

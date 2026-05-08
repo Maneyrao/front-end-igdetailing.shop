@@ -30,13 +30,14 @@ function isAvailable(product: Product) {
 }
 
 export default function ProductsPage() {
-  const { addToCart } = useCart();
+  const { addToCart, getCartCount } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<CategoryFilter>('all');
   const [sort, setSort] = useState<SortOption>('featured');
+  const cartCount = getCartCount();
 
   useEffect(() => {
     async function loadCatalog() {
@@ -136,13 +137,19 @@ export default function ProductsPage() {
                 Productos y kits de detailing en una sola pantalla, con búsqueda, filtros y stock visible.
               </p>
             </div>
-            <Link
-              to="/checkout"
-              className="inline-flex h-12 w-fit items-center justify-center gap-2 rounded-lg bg-[#0EA5E9] px-5 text-sm font-black text-white transition hover:bg-[#38BDF8]"
-            >
-              Ir al checkout
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {cartCount > 0 ? (
+              <Link
+                to="/checkout"
+                className="inline-flex h-12 w-fit items-center justify-center gap-2 rounded-lg bg-[#0EA5E9] px-5 text-sm font-black text-white transition hover:bg-[#38BDF8]"
+              >
+                Finalizar compra
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : (
+              <span className="inline-flex h-12 w-fit items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] px-5 text-sm font-bold text-slate-300">
+                Agregá productos para comprar
+              </span>
+            )}
           </div>
         </div>
       </section>

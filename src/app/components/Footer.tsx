@@ -1,6 +1,14 @@
 import { Link } from 'react-router';
 import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
-import { BANK_TRANSFER, buildWhatsAppUrl, STORE_ADDRESS, STORE_EMAIL } from '../../lib/business';
+import {
+  BANK_TRANSFER,
+  HAS_CONFIRMED_ADDRESS,
+  HAS_CONFIRMED_BANK_TRANSFER,
+  HAS_CONFIRMED_WHATSAPP,
+  buildWhatsAppUrl,
+  STORE_ADDRESS,
+  STORE_EMAIL,
+} from '../../lib/business';
 import { BrandLogo } from './BrandLogo';
 
 export const Footer = () => {
@@ -47,36 +55,44 @@ export const Footer = () => {
             <h3 className="text-white font-semibold mb-4">Compra</h3>
             <ul className="space-y-2">
               <li className="text-gray-400 text-sm">Envío gratis desde $50.000</li>
-              <li className="text-gray-400 text-sm">Pago manual: {BANK_TRANSFER.alias}</li>
-              <li className="text-gray-400 text-sm">Stock visible en tienda</li>
-              <li className="text-gray-400 text-sm flex items-center gap-2">
-                <Phone className="w-4 h-4" />
-                Soporte por WhatsApp
+              <li className="text-gray-400 text-sm">
+                Pago manual{HAS_CONFIRMED_BANK_TRANSFER ? `: ${BANK_TRANSFER.alias}` : ' coordinado al confirmar'}
               </li>
+              <li className="text-gray-400 text-sm">Stock visible en tienda</li>
+              {HAS_CONFIRMED_WHATSAPP && (
+                <li className="text-gray-400 text-sm flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  Soporte por WhatsApp
+                </li>
+              )}
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-semibold mb-4">Contacto</h3>
             <div className="flex space-x-4 mb-4">
-              <a
-                href={whatsAppUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition"
-                aria-label="WhatsApp"
-              >
-                <MessageCircle className="w-5 h-5" />
-              </a>
+              {HAS_CONFIRMED_WHATSAPP && (
+                <a
+                  href={whatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition"
+                  aria-label="WhatsApp"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                </a>
+              )}
               <a href={`mailto:${STORE_EMAIL}`} className="text-gray-400 hover:text-white transition" aria-label="Email">
                 <Mail className="w-5 h-5" />
               </a>
             </div>
             <p className="text-gray-400 text-sm">{STORE_EMAIL}</p>
-            <p className="mt-3 flex items-start gap-2 text-gray-400 text-sm">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#38BDF8]" />
-              {STORE_ADDRESS}
-            </p>
+            {HAS_CONFIRMED_ADDRESS && (
+              <p className="mt-3 flex items-start gap-2 text-gray-400 text-sm">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#38BDF8]" />
+                {STORE_ADDRESS}
+              </p>
+            )}
           </div>
         </div>
 

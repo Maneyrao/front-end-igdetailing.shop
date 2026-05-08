@@ -119,7 +119,7 @@ export default function ProductPage() {
   const categoryLabel = CATEGORY_LABELS[product.category] ?? product.category;
 
   return (
-    <div className="min-h-screen bg-[#050607]">
+    <div className="min-h-screen overflow-x-hidden bg-[#050607] pb-24 sm:pb-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <BackLink fallback={`/category/${product.category}`} label="Volver" className="mb-8" />
 
@@ -175,7 +175,7 @@ export default function ProductPage() {
             </p>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <div className="flex items-center rounded-lg border border-white/10 bg-[#0B0F14]">
                   <button
                     onClick={() => handleQuantityChange(-1)}
@@ -205,18 +205,18 @@ export default function ProductPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-800">
-              <div className="text-center">
+            <div className="grid grid-cols-1 gap-3 border-t border-gray-800 pt-6 sm:grid-cols-3 sm:gap-4">
+              <div className="rounded-lg bg-white/[0.035] p-3 text-center sm:bg-transparent sm:p-0">
                 <p className="text-gray-400 text-sm mb-1">Envío gratis</p>
                 <p className="text-white text-xs">Desde $50.000</p>
               </div>
-              <div className="text-center">
+              <div className="rounded-lg bg-white/[0.035] p-3 text-center sm:bg-transparent sm:p-0">
                 <p className="text-gray-400 text-sm mb-1">Pago</p>
                 <p className="text-white text-xs">Manual</p>
               </div>
-              <div className="text-center">
+              <div className="rounded-lg bg-white/[0.035] p-3 text-center sm:bg-transparent sm:p-0">
                 <p className="text-gray-400 text-sm mb-1">Soporte</p>
-                <p className="text-white text-xs">WhatsApp</p>
+                <p className="text-white text-xs">Al confirmar</p>
               </div>
             </div>
           </motion.div>
@@ -317,6 +317,23 @@ export default function ProductPage() {
             </div>
           </div>
         )}
+      </div>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#050607]/95 p-3 backdrop-blur sm:hidden">
+        <div className="mx-auto flex max-w-7xl items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold text-slate-400">Precio</p>
+            <p className="truncate text-lg font-black text-white">{formatARS(product.price)}</p>
+          </div>
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={isOutOfStock}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#0EA5E9] px-5 py-3 text-sm font-black text-white transition hover:bg-[#38BDF8] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <ShoppingCart className="h-4 w-4" />
+            {isOutOfStock ? 'Sin stock' : 'Agregar'}
+          </button>
+        </div>
       </div>
     </div>
   );

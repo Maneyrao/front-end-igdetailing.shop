@@ -26,7 +26,7 @@ export const BestSellers = () => {
   }, []);
 
   const handleAddToCart = (product: Product, e: React.MouseEvent) => {
-    e.preventDefault();
+    e.stopPropagation();
     if ((product.stock ?? 0) <= 0) return;
     addToCart(product);
   };
@@ -70,11 +70,8 @@ export const BestSellers = () => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <Link
-                to={`/product/${product.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#101720] transition-all hover:border-cyan-300/35 hover:shadow-lg hover:shadow-cyan-950/20"
-              >
-                <div className="relative h-48 overflow-hidden bg-black">
+              <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#101720] transition-all hover:border-cyan-300/35 hover:shadow-lg hover:shadow-cyan-950/20">
+                <Link to={`/product/${product.slug}`} className="relative block h-48 overflow-hidden bg-black">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -87,21 +84,24 @@ export const BestSellers = () => {
                   }`}>
                     {isOutOfStock ? 'Sin stock' : `${product.stock ?? 0} u.`}
                   </div>
-                </div>
+                </Link>
 
                 <div className="flex flex-1 flex-col p-4">
-                  <h3 className="text-white font-black mb-2 group-hover:text-[#38BDF8] transition">
-                    {product.name}
-                  </h3>
-                  <p className="text-slate-400 text-sm mb-4 line-clamp-2 flex-1">
-                    {product.shortDescription}
-                  </p>
+                  <Link to={`/product/${product.slug}`} className="block">
+                    <h3 className="text-white font-black mb-2 group-hover:text-[#38BDF8] transition">
+                      {product.name}
+                    </h3>
+                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                      {product.shortDescription}
+                    </p>
+                  </Link>
 
-                  <div className="flex items-center justify-between">
+                  <div className="mt-auto flex items-center justify-between">
                     <span className="text-xl font-black text-white">
                       {formatARS(product.price)}
                     </span>
                     <button
+                      type="button"
                       onClick={(e) => handleAddToCart(product, e)}
                       disabled={isOutOfStock}
                       className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#0EA5E9] text-white transition hover:bg-[#38BDF8] disabled:cursor-not-allowed disabled:opacity-50"
@@ -111,7 +111,7 @@ export const BestSellers = () => {
                     </button>
                   </div>
                 </div>
-              </Link>
+              </article>
             </motion.div>
             );
           })}
