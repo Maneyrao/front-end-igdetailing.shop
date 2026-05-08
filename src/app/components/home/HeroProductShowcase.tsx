@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowRight, Pause, Play, ShieldCheck, ShoppingCart } from 'lucide-react';
+import { ArrowRight, ChevronRight, Pause, Play, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '../../../lib/supabase';
 import { kitAsProduct, kitFromRow, productFromRow } from '../../../lib/mappers';
@@ -67,6 +67,11 @@ export function HeroProductShowcase() {
     toast.success(`${activeProduct.name} agregado al carrito`);
   };
 
+  const showNextProduct = () => {
+    setActiveIndex((currentIndex) => (currentIndex + 1) % products.length);
+    setIsPaused(false);
+  };
+
   return (
     <motion.div
       initial={false}
@@ -113,6 +118,14 @@ export function HeroProductShowcase() {
         <div className="absolute bottom-3 left-3 rounded-full bg-black/65 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-cyan-100 backdrop-blur">
           {activeIndex + 1} / {products.length}
         </div>
+        <button
+          type="button"
+          onClick={showNextProduct}
+          className="group absolute right-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-[#0EA5E9]/95 text-white shadow-xl shadow-black/30 transition hover:scale-105 hover:bg-[#38BDF8] focus:outline-none focus:ring-2 focus:ring-cyan-200"
+          aria-label="Pasar al siguiente producto"
+        >
+          <ChevronRight className="h-6 w-6 transition group-hover:translate-x-0.5" />
+        </button>
       </div>
 
       <AnimatePresence mode="wait">
