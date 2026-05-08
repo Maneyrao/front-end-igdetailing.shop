@@ -141,7 +141,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                     onClick={() => onOpenChange(false)}
                     className="rounded-lg bg-[#0EA5E9] px-4 py-3 text-center text-sm font-black text-white transition hover:bg-[#38BDF8]"
                   >
-                    Finalizar
+                    Finalizar compra
                   </Link>
                 </div>
               </div>

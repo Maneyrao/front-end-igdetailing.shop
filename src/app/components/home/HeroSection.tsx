@@ -52,19 +52,6 @@ export const HeroSection = () => {
               Ver kits
             </Link>
           </div>
-
-          <div className="mt-8 grid max-w-xl grid-cols-3 gap-2 sm:gap-3">
-            {[
-              ['8+', 'productos'],
-              ['3', 'kits'],
-              ['Stock', 'visible'],
-            ].map(([value, label]) => (
-              <div key={label} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3">
-                <p className="text-lg font-black text-white">{value}</p>
-                <p className="text-xs font-medium text-slate-400">{label}</p>
-              </div>
-            ))}
-          </div>
         </motion.div>
 
         <HeroProductShowcase />

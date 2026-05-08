@@ -6,6 +6,14 @@ import { BrandLogo } from './BrandLogo';
 import { PRODUCT_CATEGORIES } from '../../lib/catalog';
 import { CartDrawer } from './CartDrawer';
 
+const promoMessages = [
+  '10% OFF en efectivo',
+  'Envío gratis desde $50.000',
+  'Kits listos para arrancar',
+  'Stock actualizado',
+  'Cambios simples y rápidos',
+];
+
 const navItems = [
   { to: '/envios', label: 'Envíos', icon: Truck },
   { to: '/equipo', label: 'Equipo', icon: Users },
@@ -150,6 +158,18 @@ export const Header = () => {
             </div>
           </nav>
         )}
+      </div>
+      <div className="promo-ticker border-t border-cyan-300/15 bg-[#0EA5E9] text-white" aria-label="Promociones de la tienda">
+        <div className="overflow-hidden">
+          <div className="promo-marquee-track flex w-max items-center gap-6 py-2 text-[11px] font-black uppercase tracking-[0.18em] sm:text-xs">
+            {[...promoMessages, ...promoMessages].map((message, index) => (
+              <span key={`${message}-${index}`} className="inline-flex items-center gap-6 whitespace-nowrap">
+                <span>{message}</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-white/70" aria-hidden="true" />
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
       <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </header>

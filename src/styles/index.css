@@ -32,3 +32,32 @@ html {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.promo-marquee-track {
+  animation: promo-marquee 26s linear infinite;
+}
+
+.promo-ticker:hover .promo-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes promo-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
