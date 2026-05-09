@@ -9,7 +9,7 @@ import { supabase } from '../../lib/supabase';
 import { productFromRow } from '../../lib/mappers';
 import type { Product } from '../../lib/types';
 import { BackLink } from '../components/BackLink';
-import { FREE_SHIPPING_FROM, STANDARD_SHIPPING_COST } from '../../lib/business';
+import { FREE_SHIPPING_FROM, getCashDiscount, getCashPaymentTotal, STANDARD_SHIPPING_COST } from '../../lib/business';
 
 export default function CartPage() {
   const { items, addToCart, updateQuantity, removeFromCart, getCartTotal } = useCart();
@@ -18,7 +18,8 @@ export default function CartPage() {
   const subtotal = getCartTotal();
   const freeShippingFrom = FREE_SHIPPING_FROM;
   const shipping = subtotal >= freeShippingFrom ? 0 : STANDARD_SHIPPING_COST;
-  const total = subtotal + shipping;
+  const cashDiscount = getCashDiscount(subtotal);
+  const total = getCashPaymentTotal(subtotal, shipping);
   const amountForFreeShipping = Math.max(0, freeShippingFrom - subtotal);
   const freeShippingProgress = Math.min(100, Math.round((subtotal / freeShippingFrom) * 100));
   const cartKey = useMemo(() => items.map(item => item.product.id).join('|'), [items]);
@@ -79,7 +80,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050607] py-8">
+    <div className="min-h-screen bg-[#050607] py-8 pb-[calc(7rem+env(safe-area-inset-bottom))] sm:pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <BackLink fallback="/productos" label="Seguir comprando" className="mb-8" />
 
@@ -259,6 +260,15 @@ export default function CartPage() {
                   <span>Subtotal</span>
                   <span>{formatARS(subtotal)}</span>
                 </div>
+                <div className="rounded-lg border border-cyan-300/15 bg-cyan-300/10 p-3">
+                  <div className="flex justify-between text-cyan-50">
+                    <span className="font-black">10% OFF efectivo</span>
+                    <span className="font-black">-{formatARS(cashDiscount)}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-cyan-100/80">
+                    Descuento visible para pago en efectivo al coordinar el pedido.
+                  </p>
+                </div>
                 <div className="flex justify-between text-gray-300">
                   <span>Envío</span>
                   <span>{shipping === 0 ? 'GRATIS' : formatARS(shipping)}</span>
@@ -270,7 +280,7 @@ export default function CartPage() {
                 )}
                 <div className="border-t border-gray-700 pt-4">
                   <div className="flex justify-between text-white text-xl font-bold">
-                    <span>Total</span>
+                    <span>Total efectivo</span>
                     <span>{formatARS(total)}</span>
                   </div>
                 </div>
@@ -290,15 +300,29 @@ export default function CartPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-[#38BDF8]" />
-                  Pago manual por transferencia
+                  10% OFF visible en efectivo
                 </div>
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-[#38BDF8]" />
-                  Pedido confirmado por WhatsApp
+                  Pedido confirmado con tus datos
                 </div>
               </div>
             </motion.div>
           </div>
+        </div>
+      </div>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#050607]/95 p-3 backdrop-blur sm:hidden">
+        <div className="mx-auto flex max-w-7xl items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold text-cyan-100">Total efectivo con 10% OFF</p>
+            <p className="truncate text-lg font-black text-white">{formatARS(total)}</p>
+          </div>
+          <Link
+            to="/checkout"
+            className="rounded-lg bg-[#0EA5E9] px-5 py-3 text-sm font-black text-white transition hover:bg-[#38BDF8]"
+          >
+            Finalizar
+          </Link>
         </div>
       </div>
     </div>

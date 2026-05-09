@@ -8,7 +8,7 @@ export default function ShippingPage() {
     <InfoShell eyebrow="Envíos y retiro" title="Comprá con claridad antes de pagar.">
       <InfoGrid
         items={[
-          { icon: Truck, title: 'Envíos coordinados', text: 'Confirmamos zona, costo y tiempo por WhatsApp antes de preparar el pedido.' },
+          { icon: Truck, title: 'Envíos coordinados', text: 'Confirmamos zona, costo y tiempo con tus datos antes de preparar el pedido.' },
           { icon: PackageCheck, title: 'Gratis desde $50.000', text: 'El carrito te muestra cuánto falta para llegar al envío gratis.' },
           { icon: Clock, title: 'Preparación manual', text: 'Los pedidos se preparan después de confirmar pago y disponibilidad.' },
           { icon: MapPin, title: 'Retiro', text: `Dirección: ${STORE_ADDRESS}.` },

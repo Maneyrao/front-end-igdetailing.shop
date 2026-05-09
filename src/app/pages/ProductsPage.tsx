@@ -164,7 +164,7 @@ export default function ProductsPage() {
 
       <section className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="sticky top-16 z-20 -mx-4 border-y border-white/10 bg-[#050607]/95 px-4 py-4 backdrop-blur sm:top-[72px] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <div className="sticky top-[96px] z-20 -mx-4 border-y border-white/10 bg-[#050607]/95 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div className="mx-auto grid max-w-7xl gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
               <label className="relative block">
                 <span className="sr-only">Buscar productos</span>
@@ -199,14 +199,14 @@ export default function ProductsPage() {
               <button
                 type="button"
                 onClick={() => scrollCategoryFilters('previous')}
-                className="absolute left-0 top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#071018]/95 text-white shadow-lg shadow-black/30 transition hover:border-cyan-300/40 hover:bg-[#0EA5E9]"
+                className="absolute left-0 top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#071018]/95 text-white shadow-lg shadow-black/30 transition hover:border-cyan-300/40 hover:bg-[#0EA5E9] md:hidden"
                 aria-label="Pasar a categorías anteriores"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <div
                 ref={categoryScrollerRef}
-                className="category-filter-scroll flex gap-2 overflow-x-auto scroll-smooth px-11 pb-1"
+                className="category-filter-scroll flex gap-2 overflow-x-auto scroll-smooth px-11 pb-1 md:px-0"
               >
                 {categoryFilters.map((item) => (
                   <button
@@ -227,7 +227,7 @@ export default function ProductsPage() {
               <button
                 type="button"
                 onClick={() => scrollCategoryFilters('next')}
-                className="absolute right-0 top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#0EA5E9] text-white shadow-lg shadow-cyan-950/40 transition hover:bg-[#38BDF8]"
+                className="absolute right-0 top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#0EA5E9] text-white shadow-lg shadow-cyan-950/40 transition hover:bg-[#38BDF8] md:hidden"
                 aria-label="Pasar a más categorías"
               >
                 <ChevronRight className="h-5 w-5" />

@@ -4,7 +4,12 @@ import { motion } from 'motion/react';
 import { AlertCircle, CheckCircle, MessageCircle, Home } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatARS } from '../../lib/format';
-import { BANK_TRANSFER, buildWhatsAppUrl } from '../../lib/business';
+import {
+  BANK_TRANSFER,
+  HAS_CONFIRMED_BANK_TRANSFER,
+  HAS_CONFIRMED_WHATSAPP,
+  buildWhatsAppUrl,
+} from '../../lib/business';
 
 interface OrderSuccessState {
   orderNumber?: string;
@@ -64,7 +69,9 @@ export default function OrderSuccess() {
     );
   }
 
-  const waLink = buildWhatsAppUrl(`Hola, quiero confirmar el pago de mi pedido ${orderNumber}`);
+  const waLink = HAS_CONFIRMED_WHATSAPP
+    ? buildWhatsAppUrl(`Hola, quiero confirmar el pago de mi pedido ${orderNumber}`)
+    : '';
 
   return (
     <div className="min-h-screen bg-[#050607] flex items-center justify-center px-4 py-12">
@@ -103,7 +110,7 @@ export default function OrderSuccess() {
             )}
             {customerEmail && (
               <p className="text-gray-400 text-sm mt-2">
-                Te enviamos la confirmación a <span className="text-white">{customerEmail}</span>
+                Email registrado: <span className="text-white">{customerEmail}</span>
               </p>
             )}
           </div>
@@ -115,14 +122,13 @@ export default function OrderSuccess() {
               <li className="flex gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#0EA5E9] text-white text-xs font-bold flex items-center justify-center">1</span>
                 <span>
-                  Realizá la transferencia al CBU/Alias indicado por el monto total de tu pedido.
+                  Guardá este número de pedido para identificar tu compra.
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#0EA5E9] text-white text-xs font-bold flex items-center justify-center">2</span>
                 <span>
-                  Envianos el comprobante por WhatsApp junto con tu número de pedido{' '}
-                  <span className="text-[#0EA5E9] font-mono">{orderNumber}</span>.
+                  Coordinamos el pago manual y la entrega con los datos que cargaste.
                 </span>
               </li>
               <li className="flex gap-3">
@@ -135,41 +141,54 @@ export default function OrderSuccess() {
 
             {/* Datos de transferencia */}
             <div className="mt-5 pt-5 border-t border-gray-700 space-y-2 text-sm">
-              <p className="text-gray-400 font-medium mb-3">Datos para transferencia:</p>
-              {BANK_TRANSFER.bank !== 'A coordinar' && (
+              <p className="text-gray-400 font-medium mb-3">
+                {HAS_CONFIRMED_BANK_TRANSFER ? 'Datos para transferencia:' : 'Pago manual:'}
+              </p>
+              {HAS_CONFIRMED_BANK_TRANSFER ? (
+                <>
+                  {BANK_TRANSFER.bank !== 'A coordinar' && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Banco</span>
+                      <span className="text-white">{BANK_TRANSFER.bank}</span>
+                    </div>
+                  )}
+                  {BANK_TRANSFER.cbu && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">CBU</span>
+                      <span className="text-white font-mono text-xs">{BANK_TRANSFER.cbu}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Alias</span>
+                    <span className="text-white">{BANK_TRANSFER.alias}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Titular</span>
+                    <span className="text-white">{BANK_TRANSFER.holder}</span>
+                  </div>
+                </>
+              ) : (
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Banco</span>
-                  <span className="text-white">{BANK_TRANSFER.bank}</span>
+                  <span className="text-gray-400">Estado</span>
+                  <span className="text-white">A coordinar</span>
                 </div>
               )}
-              {BANK_TRANSFER.cbu && (
-                <div className="flex justify-between">
-                  <span className="text-gray-400">CBU</span>
-                  <span className="text-white font-mono text-xs">{BANK_TRANSFER.cbu}</span>
-                </div>
-              )}
-              <div className="flex justify-between">
-                <span className="text-gray-400">Alias</span>
-                <span className="text-white">{BANK_TRANSFER.alias}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Titular</span>
-                <span className="text-white">{BANK_TRANSFER.holder}</span>
-              </div>
             </div>
           </div>
 
           {/* Botones CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={waLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg transition"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Confirmar pago por WhatsApp
-            </a>
+            {HAS_CONFIRMED_WHATSAPP && (
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg transition"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Confirmar pago por WhatsApp
+              </a>
+            )}
             <Link
               to="/"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gray-800 text-white font-semibold rounded-lg hover:bg-gray-700 transition"

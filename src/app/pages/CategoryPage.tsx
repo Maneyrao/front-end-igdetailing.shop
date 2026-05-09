@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router';
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { ShoppingCart } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../../lib/supabase';
 import { kitAsProduct, kitFromRow, productFromRow } from '../../lib/mappers';
@@ -67,7 +68,7 @@ export default function CategoryPage() {
       <div className="min-h-screen bg-[#050607] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-white mb-4">Categoría no encontrada</h1>
-          <Link to="/" className="text-[#0EA5E9] hover:text-[#38BDF8]">
+          <Link to="/productos" className="text-[#0EA5E9] hover:text-[#38BDF8]">
             Volver a productos
           </Link>
         </div>
@@ -79,6 +80,7 @@ export default function CategoryPage() {
     e.stopPropagation();
     if (!product.isKit && (product.stock ?? 0) <= 0) return;
     addToCart(product);
+    toast.success(`${product.name} agregado al carrito`);
   };
 
   return (

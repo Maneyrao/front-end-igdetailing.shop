@@ -5,13 +5,14 @@ type BackLinkProps = {
   fallback: string;
   label: string;
   className?: string;
+  forceFallback?: boolean;
 };
 
-export function BackLink({ fallback, label, className = '' }: BackLinkProps) {
+export function BackLink({ fallback, label, className = '', forceFallback = false }: BackLinkProps) {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    if (window.history.length > 1) {
+    if (!forceFallback && window.history.length > 1) {
       navigate(-1);
       return;
     }

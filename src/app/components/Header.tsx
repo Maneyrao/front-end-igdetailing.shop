@@ -7,7 +7,6 @@ import { PRODUCT_CATEGORIES } from '../../lib/catalog';
 import { CartDrawer } from './CartDrawer';
 
 const promoMessages = [
-  '10% OFF en efectivo',
   'Envío gratis desde $50.000',
   'Kits listos para arrancar',
   'Stock actualizado',
@@ -125,14 +124,19 @@ export const Header = () => {
         )}
       </div>
       <div className="promo-ticker border-t border-cyan-300/15 bg-[#0EA5E9] text-white" aria-label="Promociones de la tienda">
-        <div className="overflow-hidden">
-          <div className="promo-marquee-track flex w-max items-center gap-6 py-2 text-[11px] font-black uppercase tracking-[0.18em] sm:text-xs">
-            {[...promoMessages, ...promoMessages].map((message, index) => (
-              <span key={`${message}-${index}`} className="inline-flex items-center gap-6 whitespace-nowrap">
-                <span>{message}</span>
-                <span className="h-1.5 w-1.5 rounded-full bg-white/70" aria-hidden="true" />
-              </span>
-            ))}
+        <div className="flex items-center overflow-hidden">
+          <div className="shrink-0 border-r border-white/25 bg-white/15 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] sm:px-5 sm:text-xs">
+            10% OFF en efectivo
+          </div>
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <div className="promo-marquee-track flex w-max items-center gap-6 py-2 text-[11px] font-black uppercase tracking-[0.18em] sm:text-xs">
+              {[...promoMessages, ...promoMessages].map((message, index) => (
+                <span key={`${message}-${index}`} className="inline-flex items-center gap-6 whitespace-nowrap">
+                  <span>{message}</span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-white/70" aria-hidden="true" />
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

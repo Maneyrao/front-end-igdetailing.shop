@@ -24,9 +24,14 @@ export const HeroSection = () => {
           transition={{ duration: 0.8 }}
           className="max-w-3xl"
         >
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
-            <BadgeCheck className="h-4 w-4" />
-            Tienda de detailing
+          <div className="mb-5 flex flex-wrap gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+              <BadgeCheck className="h-4 w-4" />
+              Tienda de detailing
+            </span>
+            <span className="inline-flex items-center rounded-full border border-white/20 bg-white/15 px-3 py-1.5 text-xs font-black uppercase tracking-[0.18em] text-white">
+              10% OFF en efectivo
+            </span>
           </div>
           <BrandLogo variant="hero" className="mb-5" />
           <h1 className="max-w-2xl text-4xl font-black leading-[1.06] tracking-tight text-white md:text-5xl lg:text-6xl">

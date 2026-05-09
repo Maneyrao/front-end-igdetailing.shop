@@ -6,7 +6,14 @@ import { toast } from 'sonner';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../../lib/supabase';
 import { formatARS } from '../../lib/format';
-import { BANK_TRANSFER, FREE_SHIPPING_FROM, HAS_CONFIRMED_BANK_TRANSFER, STANDARD_SHIPPING_COST } from '../../lib/business';
+import {
+  BANK_TRANSFER,
+  FREE_SHIPPING_FROM,
+  getCashDiscount,
+  getCashPaymentTotal,
+  HAS_CONFIRMED_BANK_TRANSFER,
+  STANDARD_SHIPPING_COST,
+} from '../../lib/business';
 import { BackLink } from '../components/BackLink';
 
 // Genera un número de pedido único-ish basado en timestamp en base 36.
@@ -62,7 +69,8 @@ export default function CheckoutPage() {
   // Envío gratuito por compras mayores a $50.000 ARS, sino $4.500 ARS
   const subtotal = getCartTotal();
   const shipping = subtotal >= FREE_SHIPPING_FROM ? 0 : STANDARD_SHIPPING_COST;
-  const total = subtotal + shipping;
+  const cashDiscount = getCashDiscount(subtotal);
+  const total = getCashPaymentTotal(subtotal, shipping);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,12 +147,14 @@ export default function CheckoutPage() {
       }
 
       const order_number = generateOrderNumber();
+      const order_id = crypto.randomUUID();
       const total_amount = total;
 
       // 1. Insertar la orden en Supabase
-      const { data: order, error: orderError } = await supabase
+      const { error: orderError } = await supabase
         .from('orders')
         .insert({
+          id: order_id,
           order_number,
           customer_name: `${firstName} ${lastName}`,
           customer_email: email,
@@ -155,15 +165,13 @@ export default function CheckoutPage() {
           payment_status: 'pending',
           order_status: 'new',
           notes: notes || null,
-        })
-        .select()
-        .single();
+        });
 
       if (orderError) throw orderError;
 
       // 2. Insertar los ítems de la orden
       const orderItems = items.map((item) => ({
-        order_id: order.id,
+        order_id,
         product_id: item.product.id,
         product_name: item.product.name,
         product_image: item.product.image,
@@ -182,7 +190,7 @@ export default function CheckoutPage() {
       navigate('/order-success', {
         state: {
           orderNumber: order_number,
-          orderId: order.id,
+          orderId: order_id,
           total: total_amount,
           customerName: firstName,
           customerEmail: email,
@@ -198,9 +206,9 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050607] py-8 pb-28 sm:pb-8">
+    <div className="min-h-screen bg-[#050607] py-8 pb-[calc(7rem+env(safe-area-inset-bottom))] sm:pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <BackLink fallback="/cart" label="Volver al carrito" className="mb-8" />
+        <BackLink fallback="/cart" label="Volver al carrito" className="mb-8" forceFallback />
 
         {/* Encabezado */}
         <motion.div
@@ -351,7 +359,7 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-bold text-white mb-4">Pago</h2>
                 <p className="text-gray-400 mb-5 text-sm leading-relaxed">
                   No pagás en esta pantalla. Primero confirmás el pedido; después te mostramos el número de orden
-                  y los pasos para coordinar el pago manual.
+                  y los pasos para coordinar el pago manual con el 10% OFF en efectivo visible.
                 </p>
 
                 {HAS_CONFIRMED_BANK_TRANSFER ? (
@@ -429,6 +437,15 @@ export default function CheckoutPage() {
                   <span>Subtotal</span>
                   <span>{formatARS(subtotal)}</span>
                 </div>
+                <div className="rounded-lg border border-cyan-300/15 bg-cyan-300/10 p-3">
+                  <div className="flex justify-between text-cyan-50">
+                    <span className="font-black">10% OFF efectivo</span>
+                    <span className="font-black">-{formatARS(cashDiscount)}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-cyan-100/80">
+                    Se aplica al coordinar el pago manual del pedido.
+                  </p>
+                </div>
                 <div className="flex justify-between text-gray-300">
                   <span>Envío</span>
                   <span>{shipping === 0 ? 'GRATIS' : formatARS(shipping)}</span>
@@ -440,7 +457,7 @@ export default function CheckoutPage() {
                 )}
                 <div className="border-t border-gray-700 pt-3">
                   <div className="flex justify-between text-white text-xl font-bold">
-                    <span>Total</span>
+                    <span>Total efectivo</span>
                     <span>{formatARS(total)}</span>
                   </div>
                 </div>
@@ -452,7 +469,7 @@ export default function CheckoutPage() {
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#050607]/95 p-3 backdrop-blur sm:hidden">
         <div className="mx-auto flex max-w-7xl items-center gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-slate-400">Total</p>
+            <p className="text-xs font-semibold text-cyan-100">Total efectivo con 10% OFF</p>
             <p className="truncate text-lg font-black text-white">{formatARS(total)}</p>
           </div>
           <button

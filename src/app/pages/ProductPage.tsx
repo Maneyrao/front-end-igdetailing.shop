@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router';
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ShoppingCart, Minus, Plus, Package, Info, ShieldCheck } from 'lucide-react';
+import { toast } from 'sonner';
 import { supabase } from '../../lib/supabase';
 import { kitAsProduct, kitFromRow, productFromRow } from '../../lib/mappers';
 import type { Product } from '../../lib/types';
@@ -108,6 +109,7 @@ export default function ProductPage() {
   const handleAddToCart = () => {
     if (!product.isKit && (product.stock ?? 0) <= 0) return;
     addToCart(product, quantity);
+    toast.success(`${product.name} agregado al carrito`);
   };
 
   const handleQuantityChange = (delta: number) => {
@@ -119,7 +121,7 @@ export default function ProductPage() {
   const categoryLabel = CATEGORY_LABELS[product.category] ?? product.category;
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#050607] pb-24 sm:pb-0">
+    <div className="min-h-screen overflow-x-hidden bg-[#050607] pb-[calc(6rem+env(safe-area-inset-bottom))] sm:pb-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <BackLink fallback={`/category/${product.category}`} label="Volver" className="mb-8" />
 
@@ -273,7 +275,7 @@ export default function ProductPage() {
               <h3 className="text-xl font-black text-white">Compra</h3>
             </div>
             <p className="text-gray-300 leading-relaxed">
-              Agregalo al carrito, completá tus datos y coordinamos pago y entrega por WhatsApp.
+              Agregalo al carrito, completá tus datos y coordinamos pago y entrega al confirmar.
             </p>
           </motion.div>
         </div>
