@@ -188,12 +188,27 @@ export default function CheckoutPage() {
 
       if (itemsError) throw itemsError;
 
-      // 3. Crear preferencia de Mercado Pago desde Edge Function privada.
-      const { data: preference, error: preferenceError } = await supabase.functions.invoke('create-preference', {
-        body: { orderId: order_id },
+      // 3. Crear preferencia de Mercado Pago desde Vercel Function privada.
+      const preferenceResponse = await fetch('/api/create-preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: order_id,
+          orderNumber: order_number,
+          customerName: `${firstName} ${lastName}`,
+          customerEmail: email,
+          items: items.map((item) => ({
+            id: item.product.id,
+            quantity: item.quantity,
+            itemType: item.product.category === 'kits' ? 'kit' : 'product',
+          })),
+        }),
       });
 
-      if (preferenceError) throw preferenceError;
+      const preference = await preferenceResponse.json().catch(() => null);
+      if (!preferenceResponse.ok) {
+        throw new Error(preference?.error ?? 'Mercado Pago no pudo iniciar el pago.');
+      }
 
       const checkoutUrl = preference?.init_point ?? preference?.sandbox_init_point;
       if (!checkoutUrl || typeof checkoutUrl !== 'string') {

@@ -1,8 +1,9 @@
 # Mercado Pago Checkout Pro
 
-La integracion usa Checkout Pro con Supabase Edge Functions. El frontend crea la
-orden y sus items, llama a `create-preference` y redirige al cliente al checkout
-alojado de Mercado Pago. El token privado nunca se expone en React.
+La integracion activa usa Checkout Pro con Vercel Functions para no bloquear el
+checkout por Edge Functions no desplegadas. El frontend crea la orden y sus items,
+llama a `/api/create-preference` y redirige al cliente al checkout alojado de
+Mercado Pago. El token privado nunca se expone en React.
 
 ## Flujo
 
