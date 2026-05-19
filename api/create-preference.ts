@@ -171,6 +171,17 @@ export default async function handler(req: any, res: any) {
       });
     }
 
+    if (preference.id && process.env.DATABASE_URL) {
+      try {
+        await getPool().query(
+          'update orders set mp_preference_id = $1 where id = $2',
+          [String(preference.id), String(orderId)]
+        );
+      } catch (error) {
+        console.error('No se pudo guardar mp_preference_id', error);
+      }
+    }
+
     return json(res, 200, {
       id: preference.id,
       init_point: preference.init_point,
@@ -182,3 +193,4 @@ export default async function handler(req: any, res: any) {
     });
   }
 }
+import { getPool } from './_db.js';
