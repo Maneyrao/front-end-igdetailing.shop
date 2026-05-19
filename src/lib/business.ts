@@ -27,6 +27,10 @@ export function getCashPaymentTotal(subtotal: number, shipping: number) {
   return Math.max(0, subtotal - getCashDiscount(subtotal)) + shipping;
 }
 
+export function getOnlinePaymentTotal(subtotal: number, shipping: number) {
+  return Math.max(0, subtotal) + shipping;
+}
+
 export function buildWhatsAppUrl(message: string) {
   return `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(message)}`;
 }

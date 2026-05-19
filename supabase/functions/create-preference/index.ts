@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: 'Método no permitido' }, 405);
   }
 
-  const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
+  const accessToken = Deno.env.get('MP_ACCESS_TOKEN') ?? Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   const publicSiteUrl = Deno.env.get('PUBLIC_SITE_URL') ?? 'http://localhost:5175';
@@ -72,15 +72,36 @@ Deno.serve(async (req) => {
   const preference = new Preference(client);
   const notificationUrl = webhookUrl ? `${webhookUrl}${webhookUrl.includes('?') ? '&' : '?'}source_news=webhooks` : undefined;
 
+  const preferenceItems = (items as OrderItemRow[]).map((item) => ({
+    id: item.product_id ?? undefined,
+    title: item.product_name,
+    quantity: Number(item.quantity),
+    unit_price: Number(item.unit_price),
+    currency_id: 'ARS',
+  }));
+  const itemsTotal = (items as OrderItemRow[]).reduce(
+    (sum, item) => sum + Number(item.quantity) * Number(item.unit_price),
+    0
+  );
+  const totalAmount = Number(order.total_amount);
+  const shippingDifference = Math.round((totalAmount - itemsTotal) * 100) / 100;
+
+  if (shippingDifference > 0) {
+    preferenceItems.push({
+      id: 'shipping',
+      title: 'Envío',
+      quantity: 1,
+      unit_price: shippingDifference,
+      currency_id: 'ARS',
+    });
+  }
+
+  const successUrl = `${publicSiteUrl}/order-success?order_number=${encodeURIComponent(order.order_number)}&payment=approved`;
+  const pendingUrl = `${publicSiteUrl}/order-success?order_number=${encodeURIComponent(order.order_number)}&payment=pending`;
+
   const mpPreference = await preference.create({
     body: {
-      items: (items as OrderItemRow[]).map((item) => ({
-        id: item.product_id ?? undefined,
-        title: item.product_name,
-        quantity: Number(item.quantity),
-        unit_price: Number(item.unit_price),
-        currency_id: 'ARS',
-      })),
+      items: preferenceItems,
       payer: {
         name: order.customer_name ?? undefined,
         email: order.customer_email ?? undefined,
@@ -91,9 +112,9 @@ Deno.serve(async (req) => {
         order_number: order.order_number,
       },
       back_urls: {
-        success: `${publicSiteUrl}/order-success`,
-        pending: `${publicSiteUrl}/order-success`,
-        failure: `${publicSiteUrl}/cart`,
+        success: successUrl,
+        pending: pendingUrl,
+        failure: `${publicSiteUrl}/cart?payment=failure`,
       },
       auto_return: 'approved',
       notification_url: notificationUrl,

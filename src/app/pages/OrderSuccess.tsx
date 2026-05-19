@@ -23,11 +23,15 @@ export default function OrderSuccess() {
   const location = useLocation();
   const { clearCart } = useCart();
   const state = location.state as OrderSuccessState | null;
+  const searchParams = new URLSearchParams(location.search);
 
-  const orderNumber = state?.orderNumber;
+  const orderNumber = state?.orderNumber ?? searchParams.get('order_number') ?? undefined;
   const total = state?.total;
   const customerName = state?.customerName;
   const customerEmail = state?.customerEmail;
+  const paymentStatus = searchParams.get('payment');
+  const isMercadoPagoReturn = Boolean(paymentStatus);
+  const isPendingPayment = paymentStatus === 'pending';
 
   useEffect(() => {
     if (orderNumber) {
@@ -93,10 +97,12 @@ export default function OrderSuccess() {
 
           {/* Mensaje principal */}
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-            ¡Pedido recibido{customerName ? `, ${customerName}` : ''}!
+            {isPendingPayment ? 'Pago pendiente' : `¡Pedido recibido${customerName ? `, ${customerName}` : ''}!`}
           </h1>
           <p className="text-lg text-gray-300 mb-8">
-            Tu pedido fue registrado correctamente. Seguí los pasos de abajo para completar la compra.
+            {isMercadoPagoReturn
+              ? 'Mercado Pago nos avisará el estado final de la operación. Si el pago fue aprobado, la orden se actualiza automáticamente.'
+              : 'Tu pedido fue registrado correctamente. Seguí los pasos de abajo para completar la compra.'}
           </p>
 
           {/* Número de pedido */}
@@ -128,7 +134,9 @@ export default function OrderSuccess() {
               <li className="flex gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#0EA5E9] text-white text-xs font-bold flex items-center justify-center">2</span>
                 <span>
-                  Coordinamos el pago manual y la entrega con los datos que cargaste.
+                  {isMercadoPagoReturn
+                    ? 'Si el pago queda pendiente, Mercado Pago puede demorar unos minutos en confirmar el resultado.'
+                    : 'Coordinamos el pago manual y la entrega con los datos que cargaste.'}
                 </span>
               </li>
               <li className="flex gap-3">
@@ -139,41 +147,42 @@ export default function OrderSuccess() {
               </li>
             </ol>
 
-            {/* Datos de transferencia */}
-            <div className="mt-5 pt-5 border-t border-gray-700 space-y-2 text-sm">
-              <p className="text-gray-400 font-medium mb-3">
-                {HAS_CONFIRMED_BANK_TRANSFER ? 'Datos para transferencia:' : 'Pago manual:'}
-              </p>
-              {HAS_CONFIRMED_BANK_TRANSFER ? (
-                <>
-                  {BANK_TRANSFER.bank !== 'A coordinar' && (
+            {!isMercadoPagoReturn && (
+              <div className="mt-5 pt-5 border-t border-gray-700 space-y-2 text-sm">
+                <p className="text-gray-400 font-medium mb-3">
+                  {HAS_CONFIRMED_BANK_TRANSFER ? 'Datos para transferencia:' : 'Pago manual:'}
+                </p>
+                {HAS_CONFIRMED_BANK_TRANSFER ? (
+                  <>
+                    {BANK_TRANSFER.bank !== 'A coordinar' && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Banco</span>
+                        <span className="text-white">{BANK_TRANSFER.bank}</span>
+                      </div>
+                    )}
+                    {BANK_TRANSFER.cbu && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">CBU</span>
+                        <span className="text-white font-mono text-xs">{BANK_TRANSFER.cbu}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Banco</span>
-                      <span className="text-white">{BANK_TRANSFER.bank}</span>
+                      <span className="text-gray-400">Alias</span>
+                      <span className="text-white">{BANK_TRANSFER.alias}</span>
                     </div>
-                  )}
-                  {BANK_TRANSFER.cbu && (
                     <div className="flex justify-between">
-                      <span className="text-gray-400">CBU</span>
-                      <span className="text-white font-mono text-xs">{BANK_TRANSFER.cbu}</span>
+                      <span className="text-gray-400">Titular</span>
+                      <span className="text-white">{BANK_TRANSFER.holder}</span>
                     </div>
-                  )}
+                  </>
+                ) : (
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Alias</span>
-                    <span className="text-white">{BANK_TRANSFER.alias}</span>
+                    <span className="text-gray-400">Estado</span>
+                    <span className="text-white">A coordinar</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Titular</span>
-                    <span className="text-white">{BANK_TRANSFER.holder}</span>
-                  </div>
-                </>
-              ) : (
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Estado</span>
-                  <span className="text-white">A coordinar</span>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Botones CTA */}

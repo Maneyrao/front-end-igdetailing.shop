@@ -11,6 +11,7 @@ import {
   FREE_SHIPPING_FROM,
   getCashDiscount,
   getCashPaymentTotal,
+  getOnlinePaymentTotal,
   HAS_CONFIRMED_BANK_TRANSFER,
   STANDARD_SHIPPING_COST,
 } from '../../lib/business';
@@ -70,7 +71,8 @@ export default function CheckoutPage() {
   const subtotal = getCartTotal();
   const shipping = subtotal >= FREE_SHIPPING_FROM ? 0 : STANDARD_SHIPPING_COST;
   const cashDiscount = getCashDiscount(subtotal);
-  const total = getCashPaymentTotal(subtotal, shipping);
+  const cashTotal = getCashPaymentTotal(subtotal, shipping);
+  const onlineTotal = getOnlinePaymentTotal(subtotal, shipping);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,7 +150,7 @@ export default function CheckoutPage() {
 
       const order_number = generateOrderNumber();
       const order_id = crypto.randomUUID();
-      const total_amount = total;
+      const total_amount = onlineTotal;
 
       // 1. Insertar la orden en Supabase
       const { error: orderError } = await supabase
@@ -186,20 +188,23 @@ export default function CheckoutPage() {
 
       if (itemsError) throw itemsError;
 
-      // 3. Navegar a éxito. OrderSuccess se encarga de limpiar el carrito.
-      navigate('/order-success', {
-        state: {
-          orderNumber: order_number,
-          orderId: order_id,
-          total: total_amount,
-          customerName: firstName,
-          customerEmail: email,
-        },
+      // 3. Crear preferencia de Mercado Pago desde Edge Function privada.
+      const { data: preference, error: preferenceError } = await supabase.functions.invoke('create-preference', {
+        body: { orderId: order_id },
       });
+
+      if (preferenceError) throw preferenceError;
+
+      const checkoutUrl = preference?.init_point ?? preference?.sandbox_init_point;
+      if (!checkoutUrl || typeof checkoutUrl !== 'string') {
+        throw new Error('Mercado Pago no devolvió un link de pago.');
+      }
+
+      window.location.assign(checkoutUrl);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al procesar el pedido.';
       console.error('Error al crear la orden:', err);
-      toast.error(`No se pudo crear el pedido: ${message}`);
+      toast.error(`No se pudo iniciar el pago: ${message}`);
     } finally {
       setSubmitting(false);
     }
@@ -356,10 +361,10 @@ export default function CheckoutPage() {
 
               {/* Sección de pago */}
               <div className="bg-[#0B0F14] rounded-xl p-6 border border-white/10">
-                <h2 className="text-xl font-bold text-white mb-4">Pago</h2>
+                <h2 className="text-xl font-bold text-white mb-4">Pago con Mercado Pago</h2>
                 <p className="text-gray-400 mb-5 text-sm leading-relaxed">
-                  No pagás en esta pantalla. Primero confirmás el pedido; después te mostramos el número de orden
-                  y los pasos para coordinar el pago manual con el 10% OFF en efectivo visible.
+                  Al confirmar te llevamos a Mercado Pago para completar el pago online. El pedido queda pendiente
+                  hasta que Mercado Pago confirme la operación.
                 </p>
 
                 {HAS_CONFIRMED_BANK_TRANSFER ? (
@@ -387,7 +392,7 @@ export default function CheckoutPage() {
                   </div>
                 ) : (
                   <div className="rounded-xl border border-cyan-300/15 bg-cyan-300/10 p-4 text-sm leading-relaxed text-cyan-50">
-                    Los datos de pago se coordinan cuando el pedido queda registrado.
+                    El 10% OFF aplica solo para efectivo o transferencia coordinada manualmente.
                   </div>
                 )}
               </div>
@@ -397,7 +402,7 @@ export default function CheckoutPage() {
                 disabled={submitting}
                 className="hidden w-full bg-[#0EA5E9] text-white font-semibold py-4 rounded-lg hover:bg-[#38BDF8] transition disabled:opacity-50 disabled:cursor-not-allowed sm:block"
               >
-                {submitting ? 'Procesando...' : `Confirmar pedido · ${formatARS(total)}`}
+                {submitting ? 'Redirigiendo...' : `Pagar con Mercado Pago · ${formatARS(onlineTotal)}`}
               </button>
             </motion.form>
           </div>
@@ -443,7 +448,7 @@ export default function CheckoutPage() {
                     <span className="font-black">-{formatARS(cashDiscount)}</span>
                   </div>
                   <p className="mt-1 text-xs text-cyan-100/80">
-                    Se aplica al coordinar el pago manual del pedido.
+                    Efectivo/transferencia: {formatARS(cashTotal)} al coordinar el pedido.
                   </p>
                 </div>
                 <div className="flex justify-between text-gray-300">
@@ -457,8 +462,8 @@ export default function CheckoutPage() {
                 )}
                 <div className="border-t border-gray-700 pt-3">
                   <div className="flex justify-between text-white text-xl font-bold">
-                    <span>Total efectivo</span>
-                    <span>{formatARS(total)}</span>
+                    <span>Total Mercado Pago</span>
+                    <span>{formatARS(onlineTotal)}</span>
                   </div>
                 </div>
               </div>
@@ -469,8 +474,8 @@ export default function CheckoutPage() {
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#050607]/95 p-3 backdrop-blur sm:hidden">
         <div className="mx-auto flex max-w-7xl items-center gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-cyan-100">Total efectivo con 10% OFF</p>
-            <p className="truncate text-lg font-black text-white">{formatARS(total)}</p>
+            <p className="text-xs font-semibold text-cyan-100">Total Mercado Pago</p>
+            <p className="truncate text-lg font-black text-white">{formatARS(onlineTotal)}</p>
           </div>
           <button
             type="submit"
@@ -478,7 +483,7 @@ export default function CheckoutPage() {
             disabled={submitting}
             className="rounded-lg bg-[#0EA5E9] px-5 py-3 text-sm font-black text-white transition hover:bg-[#38BDF8] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {submitting ? 'Procesando...' : 'Confirmar'}
+            {submitting ? 'Redirigiendo...' : 'Pagar'}
           </button>
         </div>
       </div>

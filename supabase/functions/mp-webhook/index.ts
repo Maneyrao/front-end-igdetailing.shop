@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: 'Método no permitido' }, 405);
   }
 
-  const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
+  const accessToken = Deno.env.get('MP_ACCESS_TOKEN') ?? Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 

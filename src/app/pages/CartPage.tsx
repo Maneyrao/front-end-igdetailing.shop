@@ -9,7 +9,13 @@ import { supabase } from '../../lib/supabase';
 import { productFromRow } from '../../lib/mappers';
 import type { Product } from '../../lib/types';
 import { BackLink } from '../components/BackLink';
-import { FREE_SHIPPING_FROM, getCashDiscount, getCashPaymentTotal, STANDARD_SHIPPING_COST } from '../../lib/business';
+import {
+  FREE_SHIPPING_FROM,
+  getCashDiscount,
+  getCashPaymentTotal,
+  getOnlinePaymentTotal,
+  STANDARD_SHIPPING_COST,
+} from '../../lib/business';
 
 export default function CartPage() {
   const { items, addToCart, updateQuantity, removeFromCart, getCartTotal } = useCart();
@@ -19,7 +25,8 @@ export default function CartPage() {
   const freeShippingFrom = FREE_SHIPPING_FROM;
   const shipping = subtotal >= freeShippingFrom ? 0 : STANDARD_SHIPPING_COST;
   const cashDiscount = getCashDiscount(subtotal);
-  const total = getCashPaymentTotal(subtotal, shipping);
+  const cashTotal = getCashPaymentTotal(subtotal, shipping);
+  const onlineTotal = getOnlinePaymentTotal(subtotal, shipping);
   const amountForFreeShipping = Math.max(0, freeShippingFrom - subtotal);
   const freeShippingProgress = Math.min(100, Math.round((subtotal / freeShippingFrom) * 100));
   const cartKey = useMemo(() => items.map(item => item.product.id).join('|'), [items]);
@@ -260,15 +267,6 @@ export default function CartPage() {
                   <span>Subtotal</span>
                   <span>{formatARS(subtotal)}</span>
                 </div>
-                <div className="rounded-lg border border-cyan-300/15 bg-cyan-300/10 p-3">
-                  <div className="flex justify-between text-cyan-50">
-                    <span className="font-black">10% OFF efectivo</span>
-                    <span className="font-black">-{formatARS(cashDiscount)}</span>
-                  </div>
-                  <p className="mt-1 text-xs text-cyan-100/80">
-                    Descuento visible para pago en efectivo al coordinar el pedido.
-                  </p>
-                </div>
                 <div className="flex justify-between text-gray-300">
                   <span>Envío</span>
                   <span>{shipping === 0 ? 'GRATIS' : formatARS(shipping)}</span>
@@ -280,9 +278,18 @@ export default function CartPage() {
                 )}
                 <div className="border-t border-gray-700 pt-4">
                   <div className="flex justify-between text-white text-xl font-bold">
-                    <span>Total efectivo</span>
-                    <span>{formatARS(total)}</span>
+                    <span>Total online</span>
+                    <span>{formatARS(onlineTotal)}</span>
                   </div>
+                </div>
+                <div className="rounded-lg border border-cyan-300/15 bg-cyan-300/10 p-3">
+                  <div className="flex justify-between text-cyan-50">
+                    <span className="font-black">10% OFF efectivo</span>
+                    <span className="font-black">-{formatARS(cashDiscount)}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-cyan-100/80">
+                    Efectivo/transferencia: {formatARS(cashTotal)} al coordinar el pedido.
+                  </p>
                 </div>
               </div>
 
@@ -314,8 +321,8 @@ export default function CartPage() {
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#050607]/95 p-3 backdrop-blur sm:hidden">
         <div className="mx-auto flex max-w-7xl items-center gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-cyan-100">Total efectivo con 10% OFF</p>
-            <p className="truncate text-lg font-black text-white">{formatARS(total)}</p>
+            <p className="text-xs font-semibold text-cyan-100">Total online</p>
+            <p className="truncate text-lg font-black text-white">{formatARS(onlineTotal)}</p>
           </div>
           <Link
             to="/checkout"

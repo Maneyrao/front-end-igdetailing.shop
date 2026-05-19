@@ -3,7 +3,13 @@ import { Minus, Plus, ShoppingCart, Trash2, Truck } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from './ui/sheet';
 import { useCart } from '../context/CartContext';
 import { formatARS } from '../../lib/format';
-import { FREE_SHIPPING_FROM, getCashDiscount, getCashPaymentTotal, STANDARD_SHIPPING_COST } from '../../lib/business';
+import {
+  FREE_SHIPPING_FROM,
+  getCashDiscount,
+  getCashPaymentTotal,
+  getOnlinePaymentTotal,
+  STANDARD_SHIPPING_COST,
+} from '../../lib/business';
 
 type CartDrawerProps = {
   open: boolean;
@@ -16,7 +22,8 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
   const freeShippingFrom = FREE_SHIPPING_FROM;
   const shipping = subtotal >= freeShippingFrom ? 0 : STANDARD_SHIPPING_COST;
   const cashDiscount = getCashDiscount(subtotal);
-  const total = getCashPaymentTotal(subtotal, shipping);
+  const cashTotal = getCashPaymentTotal(subtotal, shipping);
+  const onlineTotal = getOnlinePaymentTotal(subtotal, shipping);
   const amountForFreeShipping = Math.max(0, freeShippingFrom - subtotal);
   const progress = Math.min(100, Math.round((subtotal / freeShippingFrom) * 100));
 
@@ -120,17 +127,23 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                     <span>Subtotal</span>
                     <span>{formatARS(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between text-cyan-100">
-                    <span>10% OFF efectivo</span>
-                    <span>-{formatARS(cashDiscount)}</span>
-                  </div>
                   <div className="flex justify-between">
                     <span>Envío</span>
                     <span>{shipping === 0 ? 'GRATIS' : formatARS(shipping)}</span>
                   </div>
                   <div className="flex justify-between border-t border-white/10 pt-3 text-lg font-black text-white">
-                    <span>Total efectivo</span>
-                    <span>{formatARS(total)}</span>
+                    <span>Total online</span>
+                    <span>{formatARS(onlineTotal)}</span>
+                  </div>
+                  <div className="rounded-lg border border-cyan-300/15 bg-cyan-300/10 p-3 text-cyan-50">
+                    <div className="flex justify-between">
+                      <span>10% OFF efectivo</span>
+                      <span>-{formatARS(cashDiscount)}</span>
+                    </div>
+                    <div className="mt-1 flex justify-between text-xs text-cyan-100/85">
+                      <span>Efectivo/transferencia</span>
+                      <span>{formatARS(cashTotal)}</span>
+                    </div>
                   </div>
                 </div>
                 <div className="mt-5 grid grid-cols-2 gap-3">
