@@ -7,17 +7,17 @@ type BrandLogoProps = {
 };
 
 const sizeClasses = {
-  header: 'h-12 w-[188px] sm:h-[54px] sm:w-[220px]',
-  footer: 'h-16 w-[258px]',
-  hero: 'h-auto w-full max-w-[560px] sm:max-w-[640px]',
-  admin: 'h-10 w-[166px]',
+  header: 'h-[54px] w-auto',
+  footer: 'h-auto w-[250px]',
+  hero: 'h-auto w-full max-w-[560px] sm:max-w-[660px]',
+  admin: 'h-11 w-auto',
 };
 
 export function BrandLogo({ variant = 'header', showTagline = false, className = '' }: BrandLogoProps) {
   return (
     <div className={`flex min-w-0 items-center gap-3 ${className}`} aria-label={STORE_NAME}>
       <img
-        src="/brand/ig-detailing-shop-logo.svg"
+        src="/brand/ig-detailing-shop-logo.png"
         alt={STORE_NAME}
         className={`${sizeClasses[variant]} shrink-0 object-contain`}
         draggable={false}
