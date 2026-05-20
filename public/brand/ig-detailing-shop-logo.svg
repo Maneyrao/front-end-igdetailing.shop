@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 50 1100 285" fill="none">
+  <title>IG Detailing Shop</title>
+  <defs>
+    <linearGradient id="cyan" x1="153.5" x2="1063.5" y1="74" y2="275" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#67D7FF"/>
+      <stop offset="0.44" stop-color="#25B7F0"/>
+      <stop offset="0.72" stop-color="#159FDE"/>
+      <stop offset="1" stop-color="#69D9FF"/>
+    </linearGradient>
+    <linearGradient id="cyanDark" x1="172" x2="1008" y1="104" y2="127" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5BCEF8"/>
+      <stop offset="0.58" stop-color="#1AAAE6"/>
+      <stop offset="1" stop-color="#3CC5F7"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="144" x2="378" y1="102" y2="230" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.23" stop-color="#F7F7F7"/>
+      <stop offset="0.52" stop-color="#9DA6AE"/>
+      <stop offset="0.67" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#7A828A"/>
+    </linearGradient>
+    <filter id="brandShadow" x="51" y="53" width="1098" height="254" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" flood-color="#020608" flood-opacity="0.55" stdDeviation="7"/>
+      <feDropShadow dx="0" dy="0" flood-color="#2DBDF4" flood-opacity="0.28" stdDeviation="3"/>
+    </filter>
+    <filter id="textShadow" x="90" y="70" width="1010" height="238" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="6" flood-color="#020608" flood-opacity="0.72" stdDeviation="4"/>
+    </filter>
+    <clipPath id="topBarClip">
+      <path d="M164 112H1056L1039 154H147L164 112Z"/>
+    </clipPath>
+  </defs>
+
+  <g filter="url(#brandShadow)">
+    <path
+      d="M151.6 69H1096.4C1122.7 69 1138.5 95.9 1127 119.6L1066.9 244C1059.9 258.4 1045.2 267.5 1029.2 267.5H96.7C70.4 267.5 54.6 240.6 66.1 216.9L126.2 92.5C133.2 78.1 147.9 69 151.6 69Z"
+      fill="#02070A"
+    />
+    <path
+      d="M151.6 69H1096.4C1122.7 69 1138.5 95.9 1127 119.6L1066.9 244C1059.9 258.4 1045.2 267.5 1029.2 267.5H96.7C70.4 267.5 54.6 240.6 66.1 216.9L126.2 92.5C133.2 78.1 147.9 69 151.6 69Z"
+      stroke="url(#cyan)"
+      stroke-width="14"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M173 100H1077.5C1087.2 100 1093.2 110.2 1088.8 118.9L1035.8 225.9C1033.6 230.4 1029 233.2 1024 233.2H119.5L173 100Z"
+      stroke="#36C4F7"
+      stroke-opacity="0.28"
+      stroke-width="3"
+    />
+  </g>
+
+  <g clip-path="url(#topBarClip)">
+    <path d="M164 112H1056L1039 154H147L164 112Z" fill="url(#cyanDark)"/>
+    <path d="M160 117H1054L1050 128H156L160 117Z" fill="#BCEEFF" opacity="0.55"/>
+  </g>
+  <path d="M432 112H1056L1039 154H414L432 112Z" fill="url(#cyanDark)"/>
+
+  <g filter="url(#textShadow)">
+    <path d="M156 112H254L239 150H140L156 112Z" fill="url(#metal)"/>
+    <path d="M137 164H231L198 241H103L137 164Z" fill="url(#metal)"/>
+    <path d="M273 112H418L383 191H326L318 210H372L358 241H213L270 112H273Z" fill="url(#metal)"/>
+    <path d="M279 127H386L371 162H314L286 226H249L279 127Z" fill="#0B0C0E" opacity="0.18"/>
+    <path d="M159 125H243L238 139H153L159 125Z" fill="#FFFFFF" opacity="0.58"/>
+
+    <text
+      x="420"
+      y="211"
+      fill="url(#cyan)"
+      font-family="Arial Black, Impact, Arial, sans-serif"
+      font-size="92"
+      font-style="italic"
+      font-weight="900"
+      letter-spacing="1"
+      transform="skewX(-8)"
+    >DETAILING</text>
+
+    <text
+      x="438"
+      y="302"
+      fill="url(#cyan)"
+      font-family="'Brush Script MT', 'Segoe Script', 'Snell Roundhand', cursive"
+      font-size="104"
+      font-style="italic"
+      font-weight="700"
+      letter-spacing="1"
+    >Shop</text>
+  </g>
+
+  <path d="M520 251H640" stroke="#37C6F8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M783 251H965" stroke="#37C6F8" stroke-width="8" stroke-linecap="round"/>
+</svg>
