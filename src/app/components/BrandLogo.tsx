@@ -7,10 +7,10 @@ type BrandLogoProps = {
 };
 
 const sizeClasses = {
-  header: 'h-12 w-[186px] sm:h-[54px] sm:w-[208px]',
-  footer: 'h-16 w-[248px]',
-  hero: 'h-28 w-full max-w-[500px] sm:h-32 sm:max-w-[560px]',
-  admin: 'h-10 w-[154px]',
+  header: 'h-12 w-[188px] sm:h-[54px] sm:w-[220px]',
+  footer: 'h-16 w-[258px]',
+  hero: 'h-auto w-full max-w-[560px] sm:max-w-[640px]',
+  admin: 'h-10 w-[166px]',
 };
 
 export function BrandLogo({ variant = 'header', showTagline = false, className = '' }: BrandLogoProps) {

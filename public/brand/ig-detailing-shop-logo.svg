@@ -1,92 +1,105 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 50 1100 285" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="35 40 1745 525" fill="none">
   <title>IG Detailing Shop</title>
   <defs>
-    <linearGradient id="cyan" x1="153.5" x2="1063.5" y1="74" y2="275" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#67D7FF"/>
-      <stop offset="0.44" stop-color="#25B7F0"/>
-      <stop offset="0.72" stop-color="#159FDE"/>
-      <stop offset="1" stop-color="#69D9FF"/>
+    <linearGradient id="brandCyan" x1="201" x2="1670" y1="88" y2="473" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#66D8FF"/>
+      <stop offset="0.36" stop-color="#2EBDF2"/>
+      <stop offset="0.66" stop-color="#159DDA"/>
+      <stop offset="1" stop-color="#5ED5FF"/>
     </linearGradient>
-    <linearGradient id="cyanDark" x1="172" x2="1008" y1="104" y2="127" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5BCEF8"/>
-      <stop offset="0.58" stop-color="#1AAAE6"/>
-      <stop offset="1" stop-color="#3CC5F7"/>
+    <linearGradient id="brandCyanDeep" x1="290" x2="1630" y1="130" y2="182" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6ADFFF"/>
+      <stop offset="0.52" stop-color="#27B8EE"/>
+      <stop offset="1" stop-color="#159DD9"/>
     </linearGradient>
-    <linearGradient id="metal" x1="144" x2="378" y1="102" y2="230" gradientUnits="userSpaceOnUse">
+    <linearGradient id="metal" x1="168" x2="661" y1="126" y2="361" gradientUnits="userSpaceOnUse">
       <stop stop-color="#FFFFFF"/>
-      <stop offset="0.23" stop-color="#F7F7F7"/>
-      <stop offset="0.52" stop-color="#9DA6AE"/>
-      <stop offset="0.67" stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#7A828A"/>
+      <stop offset="0.19" stop-color="#F5F5F5"/>
+      <stop offset="0.44" stop-color="#A5ABB2"/>
+      <stop offset="0.59" stop-color="#FFFFFF"/>
+      <stop offset="0.79" stop-color="#C5C8CC"/>
+      <stop offset="1" stop-color="#68717A"/>
     </linearGradient>
-    <filter id="brandShadow" x="51" y="53" width="1098" height="254" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="8" flood-color="#020608" flood-opacity="0.55" stdDeviation="7"/>
-      <feDropShadow dx="0" dy="0" flood-color="#2DBDF4" flood-opacity="0.28" stdDeviation="3"/>
+    <linearGradient id="metalShade" x1="225" x2="605" y1="150" y2="335" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.72"/>
+      <stop offset="0.35" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="1" stop-color="#111820" stop-opacity="0.32"/>
+    </linearGradient>
+    <filter id="glow" x="42" y="42" width="1730" height="540" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="9" flood-color="#010305" flood-opacity="0.78" stdDeviation="7"/>
+      <feDropShadow dx="0" dy="0" flood-color="#2ABCF2" flood-opacity="0.32" stdDeviation="4"/>
     </filter>
-    <filter id="textShadow" x="90" y="70" width="1010" height="238" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="6" flood-color="#020608" flood-opacity="0.72" stdDeviation="4"/>
+    <filter id="letterShadow" x="90" y="92" width="1580" height="460" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="7" flood-color="#010305" flood-opacity="0.86" stdDeviation="4"/>
     </filter>
-    <clipPath id="topBarClip">
-      <path d="M164 112H1056L1039 154H147L164 112Z"/>
-    </clipPath>
   </defs>
 
-  <g filter="url(#brandShadow)">
+  <g filter="url(#glow)">
     <path
-      d="M151.6 69H1096.4C1122.7 69 1138.5 95.9 1127 119.6L1066.9 244C1059.9 258.4 1045.2 267.5 1029.2 267.5H96.7C70.4 267.5 54.6 240.6 66.1 216.9L126.2 92.5C133.2 78.1 147.9 69 151.6 69Z"
-      fill="#02070A"
+      d="M205 84H1675C1712 84 1735 121 1721 155L1643 342C1635 361 1616 374 1595 374H104C66 374 43 335 59 301L157 115C166 96 184 84 205 84Z"
+      fill="#020406"
     />
     <path
-      d="M151.6 69H1096.4C1122.7 69 1138.5 95.9 1127 119.6L1066.9 244C1059.9 258.4 1045.2 267.5 1029.2 267.5H96.7C70.4 267.5 54.6 240.6 66.1 216.9L126.2 92.5C133.2 78.1 147.9 69 151.6 69Z"
-      stroke="url(#cyan)"
+      d="M205 84H1675C1712 84 1735 121 1721 155L1643 342C1635 361 1616 374 1595 374H104C66 374 43 335 59 301L157 115C166 96 184 84 205 84Z"
+      stroke="url(#brandCyan)"
       stroke-width="14"
       stroke-linejoin="round"
     />
     <path
-      d="M173 100H1077.5C1087.2 100 1093.2 110.2 1088.8 118.9L1035.8 225.9C1033.6 230.4 1029 233.2 1024 233.2H119.5L173 100Z"
-      stroke="#36C4F7"
-      stroke-opacity="0.28"
-      stroke-width="3"
+      d="M214 111H1682C1696 111 1705 126 1699 139L1617 333C1614 341 1606 346 1598 346H104L214 111Z"
+      stroke="#48CBF9"
+      stroke-opacity="0.24"
+      stroke-width="4"
     />
   </g>
 
-  <g clip-path="url(#topBarClip)">
-    <path d="M164 112H1056L1039 154H147L164 112Z" fill="url(#cyanDark)"/>
-    <path d="M160 117H1054L1050 128H156L160 117Z" fill="#BCEEFF" opacity="0.55"/>
-  </g>
-  <path d="M432 112H1056L1039 154H414L432 112Z" fill="url(#cyanDark)"/>
+  <path d="M260 126H392L374 175H238L260 126Z" fill="url(#brandCyanDeep)"/>
+  <path d="M681 126H1667L1646 190H659L681 126Z" fill="url(#brandCyanDeep)"/>
+  <path d="M272 135H386L381 150H266L272 135Z" fill="#C9F3FF" opacity="0.52"/>
+  <path d="M696 136H1658L1653 153H690L696 136Z" fill="#C9F3FF" opacity="0.42"/>
 
-  <g filter="url(#textShadow)">
-    <path d="M156 112H254L239 150H140L156 112Z" fill="url(#metal)"/>
-    <path d="M137 164H231L198 241H103L137 164Z" fill="url(#metal)"/>
-    <path d="M273 112H418L383 191H326L318 210H372L358 241H213L270 112H273Z" fill="url(#metal)"/>
-    <path d="M279 127H386L371 162H314L286 226H249L279 127Z" fill="#0B0C0E" opacity="0.18"/>
-    <path d="M159 125H243L238 139H153L159 125Z" fill="#FFFFFF" opacity="0.58"/>
+  <g filter="url(#letterShadow)">
+    <path d="M235 195H356L290 342H168L235 195Z" fill="url(#metal)"/>
+    <path d="M420 126H660L622 227H513L498 262H597L561 342H316L420 126Z" fill="url(#metal)"/>
+    <path d="M429 126H660L647 161H450L366 342H316L420 126H429Z" fill="#FFFFFF" opacity="0.32"/>
+    <path d="M512 227H622L608 262H498L512 227Z" fill="#020406"/>
+    <path d="M356 195H390L323 342H289L356 195Z" fill="#020406"/>
+    <path d="M176 328H562L555 342H170L176 328Z" fill="url(#metalShade)"/>
 
     <text
-      x="420"
-      y="211"
-      fill="url(#cyan)"
+      x="622"
+      y="314"
+      fill="url(#brandCyan)"
+      stroke="#020406"
+      stroke-linejoin="round"
+      stroke-width="9"
+      paint-order="stroke fill"
       font-family="Arial Black, Impact, Arial, sans-serif"
-      font-size="92"
+      font-size="134"
       font-style="italic"
       font-weight="900"
-      letter-spacing="1"
-      transform="skewX(-8)"
+      letter-spacing="2"
+      transform="skewX(-9)"
     >DETAILING</text>
 
     <text
-      x="438"
-      y="302"
-      fill="url(#cyan)"
+      x="676"
+      y="521"
+      fill="url(#brandCyan)"
+      stroke="#020406"
+      stroke-linejoin="round"
+      stroke-width="8"
+      paint-order="stroke fill"
       font-family="'Brush Script MT', 'Segoe Script', 'Snell Roundhand', cursive"
-      font-size="104"
+      font-size="188"
       font-style="italic"
       font-weight="700"
       letter-spacing="1"
     >Shop</text>
   </g>
 
-  <path d="M520 251H640" stroke="#37C6F8" stroke-width="8" stroke-linecap="round"/>
-  <path d="M783 251H965" stroke="#37C6F8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M95 374H690" stroke="url(#brandCyan)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M1170 374H1598" stroke="url(#brandCyan)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M104 356H697" stroke="#BFEFFF" stroke-opacity="0.32" stroke-width="4" stroke-linecap="round"/>
+  <path d="M1180 356H1588" stroke="#BFEFFF" stroke-opacity="0.32" stroke-width="4" stroke-linecap="round"/>
 </svg>
